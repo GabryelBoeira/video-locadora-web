@@ -1,0 +1,46 @@
+spring:
+  application:
+    name: VideoLocadora
+  profiles:
+    active: ${PROFILE:local,development}
+
+server:
+  port: 8080
+  servlet:
+    context-path: /videolocadora
+
+application:
+  configuration:
+    cors-allowed-list:
+      -  http://localhost:6555
+      -  ${PORTAL_URL:http://localhost:8080}
+      -  ${API_URL:http://localhost:9090}
+    public-api-list:
+      - /api/public/**
+
+---
+spring:
+  config:
+    activate:
+      on-profile: development
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/videolocadora
+    username: root
+    password: root
+  jpa:
+    hibernate.ddl-auto: none
+    show-sql: true
+    generate-ddl: false
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL8Dialect
+        format_sql: true
+
+
+---
+spring:
+  config:
+    activate:
+      on-profile: production
+
