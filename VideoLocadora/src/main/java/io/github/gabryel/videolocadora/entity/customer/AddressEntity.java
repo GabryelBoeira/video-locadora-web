@@ -2,6 +2,7 @@ package io.github.gabryel.videolocadora.entity.customer;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.Data;
 
@@ -29,5 +30,16 @@ public class AddressEntity implements Serializable {
 
     private String zipCode;
 
-    public AddressEntity() { }
+    private boolean active;
+
+    private boolean isBillingAddress;
+
+    @ManyToOne
+    private CustomerEntity customer;
+
+    public AddressEntity() {
+        this.isBillingAddress = false;
+        this.active = true;
+    }
+
 }
