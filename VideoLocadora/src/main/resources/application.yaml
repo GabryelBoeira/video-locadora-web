@@ -21,11 +21,24 @@ server:
 application:
   configuration:
     cors-allowed-list:
-      -  http://localhost:6555
       -  ${PORTAL_URL:http://localhost:8080}
-      -  ${API_URL:http://localhost:9090}
     public-api-list:
       - /api/public/**
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: 'openapi, swagger-ui'
+
+springdoc:
+  show-actuator: true
+  swagger-ui:
+    path: /swagger-ui.html
+    operationsSorter: method
+  api-docs:
+    path: /api-docs
+
 
 ---
 spring:

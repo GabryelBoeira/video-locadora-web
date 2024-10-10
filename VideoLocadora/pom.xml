@@ -14,20 +14,7 @@
     <version>0.0.1-SNAPSHOT</version>
     <name>VideoLocadora</name>
     <description>VideoLocadora</description>
-
-    <url/>
-    <licenses>
-        <license/>
-    </licenses>
-    <developers>
-        <developer/>
-    </developers>
-    <scm>
-        <connection/>
-        <developerConnection/>
-        <tag/>
-        <url/>
-    </scm>
+    <packaging>${packaging}</packaging>
 
     <properties>
         <java.version>21</java.version>
@@ -35,7 +22,6 @@
         <maven.compiler.source>21</maven.compiler.source>
         <maven.compiler.target>21</maven.compiler.target>
     </properties>
-
 
     <dependencies>
         <dependency>
@@ -91,7 +77,32 @@
             <version>4.4</version>
         </dependency>
 
+        <dependency>
+            <groupId>org.springdoc</groupId>
+            <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+            <version>2.6.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springdoc</groupId>
+            <artifactId>springdoc-openapi-starter-webmvc-api</artifactId>
+            <version>2.6.0</version>
+        </dependency>
+
     </dependencies>
+
+    <profiles>
+        <profile>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <id>development</id>
+            <properties>
+                <packaging>jar</packaging>
+                <tomcat.scope>compile</tomcat.scope>
+            </properties>
+        </profile>
+    </profiles>
 
     <build>
         <plugins>
