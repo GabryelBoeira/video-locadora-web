@@ -1,6 +1,7 @@
 package io.github.gabryel.videolocadora.service.customer;
 
 import io.github.gabryel.videolocadora.dto.customer.CustomerDetailDTO;
+import io.github.gabryel.videolocadora.dto.customer.CustomerSaveDTO;
 import io.github.gabryel.videolocadora.entity.customer.CustomerEntity;
 import io.github.gabryel.videolocadora.exception.BusinessException;
 import io.github.gabryel.videolocadora.mapper.customer.CustomerMapper;
@@ -20,8 +21,13 @@ public class CustomerService {
         this.customerRepository = customerRepository;
     }
 
-    public void save(CustomerEntity customer) {
-        customerRepository.save(customer);
+    /**
+     * Saves a customer.
+     *
+     * @param createDto the customer to be saved
+     */
+    public void save(CustomerSaveDTO createDto) {
+        customerRepository.save(customerMapper.toEntity(createDto));
     }
 
     /**
@@ -60,8 +66,22 @@ public class CustomerService {
      * @param cpf the customer's CPF
      * @return a list containing the customer found
      */
-    public List<CustomerEntity> findByCpf(String cpf) {
-        return customerRepository.findByCpf(cpf);
+    public CustomerDetailDTO findByCpf(String cpf) throws BusinessException {
+        var entity = customerRepository.findByCpfEquals(cpf).orElseThrow(() -> new BusinessException("CPF not found"));
+
+        return customerMapper.toDetailDTO(entity);
+    }
+
+    /**
+     * Updates a customer.
+     *
+     * @param id the ID of the customer to be updated
+     * @param customerUpdateDTO the customer to be updated
+     */
+    public void update(Long id, CustomerSaveDTO customerUpdateDTO) throws BusinessException {
+        var entity = customerMapper.toEntity(customerUpdateDTO);
+        entity.setId(id);
+        customerRepository.save(entity);
     }
 
 }
