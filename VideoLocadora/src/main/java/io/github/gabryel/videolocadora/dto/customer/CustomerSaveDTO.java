@@ -13,9 +13,6 @@ public record CustomerSaveDTO(
         @NotBlank
         String cpf,
 
-        @NotNull
-        boolean delayDevolution,
-
         @Email
         String email
 ) {

@@ -35,7 +35,7 @@ public class CustomerEntity implements Serializable {
     private String cpf;
 
     @Column(name = "delay_devolution")
-    private boolean delayDevolution;
+    private boolean delayDevolution = false;
 
     private String email;
 

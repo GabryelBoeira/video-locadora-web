@@ -7,8 +7,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
-import org.springframework.web.servlet.LocaleResolver;
-import org.springframework.web.servlet.i18n.SessionLocaleResolver;
 
 import java.util.Locale;
 
@@ -17,13 +15,10 @@ import static javax.swing.text.SimpleAttributeSet.EMPTY;
 @Configuration
 public class Messages {
 
-    @Value("${spring.messages.default-locale}")
-    private String defaultLocale;
+    public static final String DEFAULT_LOCALE = "pt-BR";
 
-    @Bean
-    public LocaleResolver localeResolver() {
-        return new SessionLocaleResolver();
-    }
+    @Value("${spring.messages.default-locale}")
+    private String localeSelected;
 
     @Bean(name="messageSource")
     public ResourceBundleMessageSource messageSource() {
@@ -58,10 +53,10 @@ public class Messages {
      * @return             the retrieved message, or an empty string if the message code is blank or the message source is not found
      */
     public String getMessage(String message, Object... args) {
-        if (StringUtils.isNotBlank(defaultLocale)) defaultLocale = "pt-BR";
+        if (StringUtils.isNotBlank(localeSelected)) localeSelected = DEFAULT_LOCALE;
 
         if (StringUtils.isNotBlank(message))
-            return messageSource().getMessage(message, args, Locale.forLanguageTag(defaultLocale));
+            return messageSource().getMessage(message, args, Locale.forLanguageTag(localeSelected));
 
         return "";
     }

@@ -12,4 +12,13 @@
 - IDE: IntelliJ
 - Documentação da API:
 - Banco de Dados: MySQL 8
+- Docker 
 - AI utilizada para auxilio documentação do Projeto [Codeium](https://codeium.com/profile/gabryelboeira)
+
+
+## Informações para a execução do projeto:
+
+- Acessar a raiz do projeto em VideoLocadora/, execurta o seguinde comando para executar o projeto
+``` 
+  docker-compose up --build -d 
+```
