@@ -1,8 +1,6 @@
-version: '3.8'
-
 services:
   db:
-    image: mysql:8.0
+    image: mysql:8
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: videolocadora
@@ -11,12 +9,21 @@ services:
     restart: always
 
   app:
+    restart: always
     build: .
+    image: videolocadora
+    depends_on:
+      wait-for-db:
+        condition: service_completed_successfully
     ports:
       - "8080:8080"
-    depends_on:
-      - db
     environment:
       SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/videolocadora
       SPRING_DATASOURCE_USERNAME: root
       SPRING_DATASOURCE_PASSWORD: root
+
+  wait-for-db:
+    image: atkrad/wait4x
+    depends_on:
+      - db
+    command: tcp db:3306 -t 30s -i 250ms
