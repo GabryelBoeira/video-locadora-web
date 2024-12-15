@@ -17,10 +17,12 @@ services:
         condition: service_completed_successfully
     ports:
       - "8080:8080"
+      - "5005:5005"
     environment:
       SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/videolocadora
       SPRING_DATASOURCE_USERNAME: root
       SPRING_DATASOURCE_PASSWORD: root
+
 
   wait-for-db:
     image: atkrad/wait4x
