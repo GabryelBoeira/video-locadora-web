@@ -4,6 +4,7 @@ import io.github.gabryel.videolocadora.dto.customer.CustomerDetailDTO;
 import io.github.gabryel.videolocadora.dto.customer.CustomerSaveDTO;
 import io.github.gabryel.videolocadora.entity.customer.CustomerEntity;
 import io.github.gabryel.videolocadora.exception.BusinessException;
+import io.github.gabryel.videolocadora.mapper.address.AddressMapper;
 import io.github.gabryel.videolocadora.mapper.customer.CustomerMapper;
 import io.github.gabryel.videolocadora.repository.customer.CustomerRepository;
 import org.mapstruct.factory.Mappers;
@@ -16,6 +17,7 @@ public class CustomerService {
 
     private final CustomerRepository customerRepository;
     private final CustomerMapper customerMapper = Mappers.getMapper(CustomerMapper.class);
+    private final AddressMapper addressMapper = Mappers.getMapper(AddressMapper.class);
 
     public CustomerService(CustomerRepository customerRepository) {
         this.customerRepository = customerRepository;
@@ -27,7 +29,9 @@ public class CustomerService {
      * @param createDto the customer to be saved
      */
     public void save(CustomerSaveDTO createDto) {
-        customerRepository.save(customerMapper.toEntity(createDto));
+        var entity = customerMapper.toEntity(createDto);
+        entity.addAddress(addressMapper.toEntity(createDto.address()));
+        customerRepository.save(entity);
     }
 
     /**

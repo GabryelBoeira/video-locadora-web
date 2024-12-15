@@ -16,7 +16,7 @@ public interface CustomerMapper {
     CustomerDetailDTO toDetailDTO(CustomerEntity customerEntity);
 
     @Mapping(target = "id", ignore = true)
-    @Mapping(target = "addressList", ignore = true)
+    @Mapping(target = "addresses", ignore = true)
     @Mapping(target = "delayDevolution", ignore = true)
     CustomerEntity toEntity(CustomerSaveDTO customerSaveDTO);
 

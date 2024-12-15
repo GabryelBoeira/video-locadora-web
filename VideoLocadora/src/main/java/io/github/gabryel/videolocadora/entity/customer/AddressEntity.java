@@ -1,16 +1,6 @@
 package io.github.gabryel.videolocadora.entity.customer;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -18,14 +8,12 @@ import java.io.Serializable;
 @Data
 @Entity
 @Table(name = "address")
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
-@JsonIgnoreProperties(value = {"hibernateLazyInitializer", "handler"})
 public class AddressEntity implements Serializable {
 
     private static final long serialVersionUID = 198873988892602989L;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String street;
@@ -40,17 +28,31 @@ public class AddressEntity implements Serializable {
 
     private String zipCode;
 
-    private boolean active;
+    private boolean isActive;
 
-    private boolean isBillingAddress;
+    private boolean isPrimaryAddress;
 
-    @ManyToOne(fetch= FetchType.LAZY)
-    @JoinColumn(name = "CUSTOMER_ID", nullable = false)
+    @ManyToOne
+    @JoinColumn(name = "customer_id")
     private CustomerEntity customer;
 
-    public AddressEntity() {
-        this.isBillingAddress = false;
-        this.active = true;
+    public AddressEntity() {}
+
+    public AddressEntity(String street, Integer number, String city, String state, String country, String zipCode) {
+        this.street = street;
+        this.number = number;
+        this.city = city;
+        this.state = state;
+        this.country = country;
+        this.zipCode = zipCode;
+        this.isActive = true;
+        this.isPrimaryAddress = false;
     }
 
+    public void setCustomer(CustomerEntity customer) {
+        this.customer = customer;
+        if (customer != null && !customer.getAddresses().contains(this)) {
+            customer.getAddresses().add(this);
+        }
+    }
 }

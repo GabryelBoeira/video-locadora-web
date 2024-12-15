@@ -1,47 +1,45 @@
 package io.github.gabryel.videolocadora.entity.customer;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Data;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
 @Entity
 @Table(name = "customer")
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
-@JsonIgnoreProperties(value = {"hibernateLazyInitializer", "handler"})
 public class CustomerEntity implements Serializable {
 
     private static final long serialVersionUID = 2106833642965188722L;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String name;
 
     private String cpf;
 
+    private String email;
+
     @Column(name = "delay_devolution")
     private boolean delayDevolution = false;
 
-    private String email;
-
-    @OneToMany(mappedBy = "customer", cascade= CascadeType.ALL, fetch= FetchType.LAZY)
-    private List<AddressEntity> addressList;
+    @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL)
+    private List<AddressEntity> addresses = new ArrayList<>();
 
     public CustomerEntity() {}
 
+    public CustomerEntity(String name, String cpf, String email) {
+        this.name = name;
+        this.cpf = cpf;
+        this.email = email;
+        this.addresses = new ArrayList<>();
+    }
+
+    public void addAddress(AddressEntity address) {
+        this.addresses.add(address);
+    }
 }
