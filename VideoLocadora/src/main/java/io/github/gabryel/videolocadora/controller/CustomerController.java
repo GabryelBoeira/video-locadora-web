@@ -21,6 +21,7 @@ public class CustomerController {
     }
 
     @GetMapping
+    @Operation(summary = "Listar todos os clientes")
     public String index() {
         return "Hello World";
     }
