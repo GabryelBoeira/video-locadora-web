@@ -1,5 +1,6 @@
 package io.github.gabryel.videolocadora.dto.customer;
 
+import io.github.gabryel.videolocadora.dto.address.AddressSaveDTO;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;

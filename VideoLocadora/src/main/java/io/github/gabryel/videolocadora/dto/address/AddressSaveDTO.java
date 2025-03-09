@@ -1,4 +1,4 @@
-package io.github.gabryel.videolocadora.dto.customer;
+package io.github.gabryel.videolocadora.dto.address;
 
 import jakarta.validation.constraints.NotBlank;
 
