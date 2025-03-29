@@ -10,6 +10,7 @@ import org.mapstruct.factory.Mappers;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -33,6 +34,10 @@ public interface CustomerMapper {
      * @return a page with the customer detail DTOs
      */
     default PagedResponseDTO<CustomerDetailDTO> toDetailPage(Page<CustomerEntity> customerPage) {
+        if (customerPage == null || customerPage.isEmpty()) {
+            return new PagedResponseDTO<>(null, 0, 0, 0, 0, true, true);
+        }
+
         List<CustomerDetailDTO> customerDetailDTOList = customerPage.getContent().stream()
                 .map(this::toDetailDTO)
                 .collect(Collectors.toList());
