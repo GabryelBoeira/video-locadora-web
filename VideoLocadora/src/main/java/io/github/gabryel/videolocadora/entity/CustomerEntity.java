@@ -1,8 +1,8 @@
-package io.github.gabryel.videolocadora.entity.customer;
+package io.github.gabryel.videolocadora.entity;
 
 import jakarta.persistence.*;
-import lombok.Data;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -12,6 +12,7 @@ import java.util.List;
 @Table(name = "customer")
 public class CustomerEntity implements Serializable {
 
+    @Serial
     private static final long serialVersionUID = 2106833642965188722L;
 
     @Id
@@ -27,7 +28,7 @@ public class CustomerEntity implements Serializable {
     @Column(name = "delay_devolution")
     private boolean delayDevolution = false;
 
-    @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<AddressEntity> addresses = new ArrayList<>();
 
     public CustomerEntity() {}
