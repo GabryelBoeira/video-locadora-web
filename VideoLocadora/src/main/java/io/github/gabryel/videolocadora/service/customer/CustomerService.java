@@ -1,13 +1,11 @@
 package io.github.gabryel.videolocadora.service.customer;
 
-import io.github.gabryel.videolocadora.dto.page.PagedResponseDTO;
 import io.github.gabryel.videolocadora.dto.customer.CustomerDetailDTO;
 import io.github.gabryel.videolocadora.dto.customer.CustomerSaveDTO;
+import io.github.gabryel.videolocadora.dto.page.PagedResponseDTO;
 import io.github.gabryel.videolocadora.exception.BusinessException;
-import io.github.gabryel.videolocadora.mapper.address.AddressMapper;
 import io.github.gabryel.videolocadora.mapper.customer.CustomerMapper;
 import io.github.gabryel.videolocadora.repository.customer.CustomerRepository;
-import org.mapstruct.factory.Mappers;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -15,11 +13,11 @@ import org.springframework.stereotype.Service;
 public class CustomerService {
 
     private final CustomerRepository customerRepository;
-    private final CustomerMapper customerMapper = Mappers.getMapper(CustomerMapper.class);
-    private final AddressMapper addressMapper = Mappers.getMapper(AddressMapper.class);
+    private final CustomerMapper customerMapper;
 
-    public CustomerService(CustomerRepository customerRepository) {
+    public CustomerService(CustomerRepository customerRepository, CustomerMapper customerMapper) {
         this.customerRepository = customerRepository;
+        this.customerMapper = customerMapper;
     }
 
     /**
@@ -28,9 +26,7 @@ public class CustomerService {
      * @param createDto the customer to be saved
      */
     public void save(CustomerSaveDTO createDto) {
-        var entity = customerMapper.toEntity(createDto);
-        entity.addAddress(addressMapper.toEntity(createDto.address()));
-        customerRepository.save(entity);
+        customerRepository.save(customerMapper.toEntity(createDto));
     }
 
     /**
@@ -79,7 +75,7 @@ public class CustomerService {
     /**
      * Updates a customer.
      *
-     * @param id the ID of the customer to be updated
+     * @param id                the ID of the customer to be updated
      * @param customerUpdateDTO the customer to be updated
      */
     public void update(Long id, CustomerSaveDTO customerUpdateDTO) throws BusinessException {
