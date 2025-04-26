@@ -7,6 +7,8 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import org.hibernate.validator.constraints.br.CPF;
 
+import java.util.List;
+
 public record CustomerSaveDTO(
         @NotBlank
         String name,
@@ -20,6 +22,10 @@ public record CustomerSaveDTO(
 
         @Valid
         @NotNull
-        AddressSaveDTO address
+        List<AddressSaveDTO> addresses
 ) {
+    public CustomerSaveDTO() {
+        this(null, null, null, null);
+    }
+
 }

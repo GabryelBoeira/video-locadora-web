@@ -3,8 +3,6 @@ package io.github.gabryel.videolocadora.dto.address;
 import jakarta.validation.constraints.NotBlank;
 
 public record AddressSaveDTO(
-        Integer number,
-
         @NotBlank
         String street,
 
@@ -21,6 +19,10 @@ public record AddressSaveDTO(
         String zipCode,
 
         @NotBlank
-        String complement
+        String neighborhood,
+
+        String complement,
+
+        Integer number
         ) {
 }

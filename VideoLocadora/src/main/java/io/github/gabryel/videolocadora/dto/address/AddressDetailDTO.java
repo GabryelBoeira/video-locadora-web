@@ -1,27 +1,21 @@
 package io.github.gabryel.videolocadora.dto.address;
 
-import lombok.Data;
+public record AddressDetailDTO(
+    Long id,
+    String street,
+    Integer number,
+    String city,
+    String state,
+    String country,
+    String zipCode,
+    String neighborhood,
+    String complement,
+    boolean active,
+    boolean primaryAddress
+) {
 
-
-@Data
-public class AddressDetailDTO {
-
-    private Long id;
-
-    private String street;
-
-    private Integer number;
-
-    private String city;
-
-    private String state;
-
-    private String country;
-
-    private String zipCode;
-
-    private boolean isActive;
-
-    private boolean isPrimaryAddress;
+    public AddressDetailDTO() {
+        this(null, null, null, null, null, null, null, null, null, false, false);
+    }
 
 }

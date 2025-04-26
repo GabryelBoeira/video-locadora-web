@@ -1,6 +1,6 @@
 package io.github.gabryel.videolocadora.repository.customer;
 
-import io.github.gabryel.videolocadora.entity.customer.CustomerEntity;
+import io.github.gabryel.videolocadora.entity.CustomerEntity;
 import org.springframework.data.jpa.domain.Specification;
 
 public abstract class CustomerSpecs {
