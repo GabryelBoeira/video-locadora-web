@@ -1,5 +1,8 @@
 package io.github.gabryel.videolocadora.dto.address;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+
+@Schema(description = "Objeto contendo os detalhes do endereço.")
 public record AddressDetailDTO(
     Long id,
     String street,
