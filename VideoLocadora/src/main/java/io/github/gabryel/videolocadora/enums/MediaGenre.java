@@ -1,0 +1,23 @@
+package io.github.gabryel.videolocadora.enums;
+
+public enum MediaGenre {
+    ACTION,
+    COMEDY,
+    DRAMA,
+    FANTASY,
+    HORROR,
+    ROMANCE,
+    THRILLER,
+    SCIENCE_FICTION,
+    ANIMATION,
+    DOCUMENTARY,
+    ACTION_COMEDY,
+    ACTION_DRAMA,
+    ACTION_THRILLER,
+    COMEDY_DRAMA,
+    COMEDY_THRILLER,
+    DRAMA_THRILLER,
+    ACTION_COMEDY_DRAMA,
+    ACTION_COMEDY_THRILLER,
+    ACTION_DRAMA_THRILLER
+}
