@@ -1,5 +1,7 @@
 .idea
 .gitignore
 HELP.md
-mvnw*
-.mvn
+!.mvn/
+!mvnw
+!pom.xml
+!src/

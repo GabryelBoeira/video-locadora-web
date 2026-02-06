@@ -22,5 +22,4 @@
 ``` 
   docker-compose up --build -d 
 ```
-
 - Acessar o link para a documentação: http://localhost:8080/videolocadora/swagger-ui/index.html

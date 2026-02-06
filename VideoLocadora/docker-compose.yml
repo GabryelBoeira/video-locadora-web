@@ -13,7 +13,9 @@ services:
       - mysql-data:/var/lib/mysql
 
   app:
-    build: .
+    build:
+      context: .
+      dockerfile: Dockerfile
     image: videolocadora
     restart: always
     environment:
@@ -27,6 +29,7 @@ services:
     depends_on:
       wait-for-db:
         condition: service_completed_successfully
+
   wait-for-db:
     image: atkrad/wait4x
     depends_on:
