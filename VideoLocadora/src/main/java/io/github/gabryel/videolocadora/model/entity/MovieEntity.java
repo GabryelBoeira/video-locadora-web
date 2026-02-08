@@ -22,7 +22,7 @@ public class MovieEntity implements Serializable {
     @Column(nullable = false)
     private String title;
 
-    @Column(nullable = false)
+    @Column(name = "content_rating", nullable = false)
     @Enumerated(EnumType.STRING)
     private ContentRating contentRating;
 

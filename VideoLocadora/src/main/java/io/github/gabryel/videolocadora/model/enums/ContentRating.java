@@ -5,10 +5,10 @@ import java.util.Arrays;
 public  enum ContentRating {
 
     FREE("FREE", 0),
-    PG_10("PG", 10),
-    PG_13("PG-13", 13),
-    AGE_16("16+", 16),
-    AGE_18("18+", 18);
+    PG_10("PG_10", 10),
+    PG_13("PG_13", 13),
+    AGE_16("AGE_16", 16),
+    AGE_18("AGE_18", 18);
 
     private final String dbValue;
     private final int minAge;
