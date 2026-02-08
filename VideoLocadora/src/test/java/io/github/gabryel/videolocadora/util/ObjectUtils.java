@@ -8,6 +8,7 @@ import io.github.gabryel.videolocadora.model.entity.AddressEntity;
 import io.github.gabryel.videolocadora.model.entity.CustomerEntity;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
 
@@ -52,7 +53,7 @@ public class ObjectUtils {
      * @return a CustomerDetailDTO with valid test data
      */
     public CustomerDetailDTO customerDetailDTO() {
-        return new CustomerDetailDTO(1L, "João Silva", "123.456.789-09", false, "teste@ig.com.br", Collections.singletonList(addressDetailDTO()));
+        return new CustomerDetailDTO(1L, "João Silva", "123.456.789-09", false, LocalDate.now(),"teste@ig.com.br", Collections.singletonList(addressDetailDTO()));
     }
 
     /**
@@ -79,7 +80,7 @@ public class ObjectUtils {
      * @return a CustomerSaveDTO with valid test data
      */
     public CustomerSaveDTO customerSaveDTO() {
-        return new CustomerSaveDTO("João Silva", "123.456.789-09", "teste@ig.com.br", Collections.singletonList(addressSaveDTO()));
+        return new CustomerSaveDTO("João Silva", "123.456.789-09", "teste@ig.com.br", LocalDate.now(), Collections.singletonList(addressSaveDTO()));
     }
 
     /**

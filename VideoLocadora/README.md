@@ -22,7 +22,7 @@ Refatoração do projeto realizado em no fianal de 2017, uma Vídeo Locadora Web
  docker-compose up --build -d
 ```
 
-- Acessar o link para a documentação: http://localhost:8080/videolocadora/swagger-ui/index.html
+- Acessar o link para a Swagger: http://localhost:8080/videolocadora/swagger-ui/index.html
 
 ## Executar o projeto via Script
 
