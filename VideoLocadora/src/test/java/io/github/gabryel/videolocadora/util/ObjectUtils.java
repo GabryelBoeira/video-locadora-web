@@ -1,11 +1,11 @@
 package io.github.gabryel.videolocadora.util;
 
-import io.github.gabryel.videolocadora.dto.address.AddressDetailDTO;
-import io.github.gabryel.videolocadora.dto.address.AddressSaveDTO;
-import io.github.gabryel.videolocadora.dto.customer.CustomerDetailDTO;
-import io.github.gabryel.videolocadora.dto.customer.CustomerSaveDTO;
-import io.github.gabryel.videolocadora.entity.AddressEntity;
-import io.github.gabryel.videolocadora.entity.CustomerEntity;
+import io.github.gabryel.videolocadora.model.dto.address.AddressDetailDTO;
+import io.github.gabryel.videolocadora.model.dto.address.AddressSaveDTO;
+import io.github.gabryel.videolocadora.model.dto.customer.CustomerDetailDTO;
+import io.github.gabryel.videolocadora.model.dto.customer.CustomerSaveDTO;
+import io.github.gabryel.videolocadora.model.entity.AddressEntity;
+import io.github.gabryel.videolocadora.model.entity.CustomerEntity;
 import org.springframework.stereotype.Component;
 
 import java.util.Collections;

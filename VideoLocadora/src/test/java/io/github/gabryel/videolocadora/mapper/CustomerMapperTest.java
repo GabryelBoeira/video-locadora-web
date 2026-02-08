@@ -1,10 +1,10 @@
 package io.github.gabryel.videolocadora.mapper;
 
-import io.github.gabryel.videolocadora.dto.customer.CustomerDetailDTO;
-import io.github.gabryel.videolocadora.dto.customer.CustomerSaveDTO;
-import io.github.gabryel.videolocadora.entity.CustomerEntity;
-import io.github.gabryel.videolocadora.mapper.address.AddressMapper;
-import io.github.gabryel.videolocadora.mapper.customer.CustomerMapper;
+import io.github.gabryel.videolocadora.model.dto.customer.CustomerDetailDTO;
+import io.github.gabryel.videolocadora.model.dto.customer.CustomerSaveDTO;
+import io.github.gabryel.videolocadora.model.entity.CustomerEntity;
+import io.github.gabryel.videolocadora.model.mapper.address.AddressMapper;
+import io.github.gabryel.videolocadora.model.mapper.customer.CustomerMapper;
 import io.github.gabryel.videolocadora.util.ObjectUtils;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;

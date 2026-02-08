@@ -1,7 +1,7 @@
 package io.github.gabryel.videolocadora.controller;
 
-import io.github.gabryel.videolocadora.dto.movie.MovieDetailDTO;
-import io.github.gabryel.videolocadora.dto.movie.MovieSaveDTO;
+import io.github.gabryel.videolocadora.model.dto.movie.MovieDetailDTO;
+import io.github.gabryel.videolocadora.model.dto.movie.MovieSaveDTO;
 import io.github.gabryel.videolocadora.service.movie.MovieService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;

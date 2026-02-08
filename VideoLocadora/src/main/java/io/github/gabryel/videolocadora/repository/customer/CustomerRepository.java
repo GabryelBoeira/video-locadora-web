@@ -1,6 +1,6 @@
 package io.github.gabryel.videolocadora.repository.customer;
 
-import io.github.gabryel.videolocadora.entity.CustomerEntity;
+import io.github.gabryel.videolocadora.model.entity.CustomerEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
