@@ -7,6 +7,7 @@ import jakarta.persistence.*;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.util.UUID;
 
 @Entity
 @Table(name = "movie")
@@ -27,7 +28,7 @@ public class MovieEntity implements Serializable {
     private ContentRating contentRating;
 
     @Column(name = "internal_code", nullable = false, unique = true)
-    private String internalCode;
+    private UUID internalCode;
 
     @Column(nullable = false)
     private Double price;
@@ -46,15 +47,11 @@ public class MovieEntity implements Serializable {
     public MovieEntity() {
     }
 
-    public MovieEntity(Long id, String title, ContentRating contentRating, String internalCode, Double price, Boolean available, MediaType type, MediaGenre genre) {
-        this.id = id;
-        this.title = title;
-        this.contentRating = contentRating;
-        this.internalCode = internalCode;
-        this.price = price;
-        this.available = available;
-        this.type = type;
-        this.genre = genre;
+    @PrePersist
+    public void prePersist() {
+        if (internalCode == null) {
+            internalCode = UUID.randomUUID();
+        }
     }
 
     public Long getId() {
@@ -81,11 +78,11 @@ public class MovieEntity implements Serializable {
         this.contentRating = contentRating;
     }
 
-    public String getInternalCode() {
+    public UUID getInternalCode() {
         return internalCode;
     }
 
-    public void setInternalCode(String internalCode) {
+    public void setInternalCode(UUID internalCode) {
         this.internalCode = internalCode;
     }
 

@@ -17,8 +17,4 @@ public record AddressDetailDTO(
     boolean primaryAddress
 ) {
 
-    public AddressDetailDTO() {
-        this(null, null, null, null, null, null, null, null, null, false, false);
-    }
-
 }

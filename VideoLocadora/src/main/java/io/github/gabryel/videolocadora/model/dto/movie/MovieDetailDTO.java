@@ -3,6 +3,7 @@ package io.github.gabryel.videolocadora.model.dto.movie;
 import io.github.gabryel.videolocadora.model.enums.ContentRating;
 import io.github.gabryel.videolocadora.model.enums.MediaGenre;
 import io.github.gabryel.videolocadora.model.enums.MediaType;
+import java.util.UUID;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 
@@ -17,8 +18,8 @@ public record MovieDetailDTO(
         @Schema(description = "Classificação indicativa do filme.", example = "Livre", required = true)
         ContentRating contentRating,
 
-        @Schema(description = "Código interno do filme.", example = "123456", required = true)
-        String internalCode,
+        @Schema(description = "Código interno do filme.", example = "550e8400-e29b-41d4-a716-446655440000", required = true)
+        UUID internalCode,
 
         @Schema(description = "Preço do filme.", example = "19.90", required = true)
         Double price,

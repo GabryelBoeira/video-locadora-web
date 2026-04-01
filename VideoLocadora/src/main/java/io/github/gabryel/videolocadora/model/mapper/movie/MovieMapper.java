@@ -12,6 +12,7 @@ public interface MovieMapper {
     MovieDetailDTO toDetailDto(MovieEntity movieEntity);
 
     @Mapping(target = "id", ignore = true)
+    @Mapping(target = "internalCode", ignore = true)
     MovieEntity toEntity(MovieSaveDTO movieSaveDTO);
 
 }

@@ -37,8 +37,5 @@ public record CustomerSaveDTO(
         @NotNull
         List<AddressSaveDTO> addresses
 ) {
-    public CustomerSaveDTO() {
-        this(null, null, null, null, null);
-    }
 
 }
