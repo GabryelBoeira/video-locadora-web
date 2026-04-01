@@ -10,27 +10,27 @@ import jakarta.validation.constraints.NotNull;
 
 @Schema(description = "Objeto contendo os detalhes de um filme.")
 public record MovieSaveDTO(
-        @Schema(description = "Título do filme.", example = "O Senhor dos Aneis: A Sociedade do Anel", required = true)
+        @Schema(description = "Título do filme.", example = "O Senhor dos Aneis: A Sociedade do Anel")
         @NotBlank
         String title,
 
-        @Schema(description = "Classificação indicativa do filme.", example = "Livre", required = true)
+        @Schema(description = "Classificação indicativa do filme.", example = "Livre")
         @NotBlank
         ContentRating contentRating,
 
-        @Schema(description = "Preço do filme.", example = "19.90", required = true)
+        @Schema(description = "Preço do filme.", example = "19.90")
         @NotNull
         Double price,
 
-        @Schema(description = "Disponibilidade do filme.", example = "true", required = true)
+        @Schema(description = "Disponibilidade do filme.", example = "true")
         @NotBlank
         Boolean available,
 
-        @Schema(description = "Tipo do filme.", example = "DVD", required = true)
+        @Schema(description = "Tipo do filme.", example = "DVD")
         @NotBlank
         MediaType type,
 
-        @Schema(description = "Genero do filme.", example = "Aventura", required = true)
+        @Schema(description = "Genero do filme.", example = "Aventura")
         @NotBlank
         MediaGenre genre
 ) {
