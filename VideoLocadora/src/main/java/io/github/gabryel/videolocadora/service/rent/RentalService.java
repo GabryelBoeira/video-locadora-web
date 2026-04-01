@@ -1,5 +1,6 @@
 package io.github.gabryel.videolocadora.service.rent;
 
+import io.github.gabryel.videolocadora.configuration.Messages;
 import io.github.gabryel.videolocadora.exception.BusinessException;
 import io.github.gabryel.videolocadora.model.dto.rental.RentalCreateDTO;
 import io.github.gabryel.videolocadora.model.dto.rental.RentalDetailDTO;
@@ -20,7 +21,7 @@ import java.time.LocalDate;
 import java.time.Period;
 import java.time.ZoneId;
 import java.util.List;
-import java.util.stream.Collectors;
+
 
 @Service
 public class RentalService {
@@ -29,38 +30,40 @@ public class RentalService {
     private final CustomerRepository customerRepository;
     private final MovieRepository movieRepository;
     private final RentalMapper rentalMapper;
+    private final Messages messages;
 
     public RentalService(
             RentalRepository rentalRepository,
             CustomerRepository customerRepository,
             MovieRepository movieRepository,
-            RentalMapper rentalMapper
+            RentalMapper rentalMapper, Messages messages
     ) {
         this.rentalRepository = rentalRepository;
         this.customerRepository = customerRepository;
         this.movieRepository = movieRepository;
         this.rentalMapper = rentalMapper;
+        this.messages = messages;
     }
 
     @Transactional
     public RentalDetailDTO create(RentalCreateDTO dto) throws BusinessException {
         var customer = customerRepository.findById(dto.customerId())
-                .orElseThrow(() -> new BusinessException("Cliente não encontrado"));
+                .orElseThrow(() -> new BusinessException(messages.getMessage("cliente.nao.encontrado")));
 
         if (customer.getBirthDate() == null) {
-            throw new BusinessException("Cliente sem data de nascimento cadastrada");
+            throw new BusinessException(messages.getMessage("cliente.sem.data.nascimento"));
         }
 
         int customerAge = Period.between(customer.getBirthDate(), LocalDate.now(ZoneId.systemDefault())).getYears();
 
         var movies = movieRepository.findAllById(dto.movieIds());
         if (movies.size() != dto.movieIds().size()) {
-            throw new BusinessException("Um ou mais filmes não foram encontrados");
+            throw new BusinessException(messages.getMessage("filme.nao.encontrado"));
         }
 
         var unavailable = movies.stream().filter(m -> !m.getAvailable()).toList();
         if (!unavailable.isEmpty()) {
-            throw new BusinessException("Um ou mais filmes estão indisponíveis para aluguel");
+            throw new BusinessException(messages.getMessage("filme.indisponivel"));
         }
 
         var blockedByAge = movies.stream()
@@ -74,7 +77,7 @@ public class RentalService {
                 .toList();
 
         if (!blockedByAge.isEmpty()) {
-            throw new BusinessException("Cliente não possui idade mínima para: " + String.join(", ", blockedByAge));
+            throw new BusinessException(messages.getMessage("cliente.idade.insuficiente", String.join(", ", blockedByAge)));
         }
 
         // cria aluguel
@@ -114,17 +117,17 @@ public class RentalService {
 
     public RentalDetailDTO findById(Long id) throws BusinessException {
         var rental = rentalRepository.findById(id)
-                .orElseThrow(() -> new BusinessException("Aluguel não encontrado"));
+                .orElseThrow(() -> new BusinessException(messages.getMessage("aluguel.nao.encontrado")));
         return rentalMapper.toDetailDTO(rental);
     }
 
     @Transactional
     public void returnRental(Long rentalId, RentalReturnDTO dto) throws BusinessException {
         var rental = rentalRepository.findById(rentalId)
-                .orElseThrow(() -> new BusinessException("Aluguel não encontrado"));
+                .orElseThrow(() -> new BusinessException(messages.getMessage("aluguel.nao.encontrado")));
 
         if (rental.getStatus() != RentalStatus.OPEN) {
-            throw new BusinessException("Aluguel não está em aberto");
+            throw new BusinessException(messages.getMessage("aluguel.nao.aberto"));
         }
 
         rental.setReturnedAt(dto.returnedAt());
@@ -142,19 +145,19 @@ public class RentalService {
     @Transactional
     public void returnRentalItem(Long rentalId, Long itemId, RentalItemReturnDTO dto) throws BusinessException {
         var rental = rentalRepository.findById(rentalId)
-                .orElseThrow(() -> new BusinessException("Aluguel não encontrado"));
+                .orElseThrow(() -> new BusinessException(messages.getMessage("aluguel.nao.encontrado")));
 
         if (rental.getStatus() != RentalStatus.OPEN) {
-            throw new BusinessException("Aluguel não está em aberto");
+            throw new BusinessException(messages.getMessage("aluguel.nao.aberto"));
         }
 
         RentalItemEntity item = rental.getItems().stream()
                 .filter(i -> i.getId().equals(itemId))
                 .findFirst()
-                .orElseThrow(() -> new BusinessException("Item do aluguel não encontrado"));
+                .orElseThrow(() -> new BusinessException(messages.getMessage("item.aluguel.nao.encontrado")));
 
         if (item.getReturnedAt() != null) {
-            throw new BusinessException("Item já foi devolvido");
+            throw new BusinessException(messages.getMessage("item.ja.devolvido"));
         }
 
         item.setReturnedAt(dto.returnedAt());

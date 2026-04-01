@@ -53,7 +53,7 @@ public class Messages {
      * @return             the retrieved message, or an empty string if the message code is blank or the message source is not found
      */
     public String getMessage(String message, Object... args) {
-        if (StringUtils.isNotBlank(localeSelected)) localeSelected = DEFAULT_LOCALE;
+        if (StringUtils.isBlank(localeSelected)) localeSelected = DEFAULT_LOCALE;
 
         if (StringUtils.isNotBlank(message))
             return messageSource().getMessage(message, args, Locale.forLanguageTag(localeSelected));
