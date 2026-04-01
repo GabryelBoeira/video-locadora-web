@@ -16,7 +16,5 @@ public record CustomerDetailDTO(
         String email,
         List<AddressDetailDTO> addresses
 ) {
-    public CustomerDetailDTO() {
-        this(null, null, null, false, null, null, null);
-    }
+
 }

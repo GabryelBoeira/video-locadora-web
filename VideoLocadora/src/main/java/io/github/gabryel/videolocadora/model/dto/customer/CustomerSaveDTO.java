@@ -14,11 +14,11 @@ import java.util.List;
 
 @Schema(description = "Objeto de transferência de dados para criar um novo cliente.")
 public record CustomerSaveDTO(
-        @Schema(description = "Nome completo do cliente.", example = "João da Silva", required = true)
+        @Schema(description = "Nome completo do cliente.", example = "João da Silva")
         @NotBlank
         String name,
 
-        @Schema(description = "Número de CPF do cliente (sem formatação).", example = "12345678909", required = true, pattern = "^\\d{11}$")
+        @Schema(description = "Número de CPF do cliente (sem formatação).", example = "12345678909", pattern = "^\\d{11}$")
         @CPF
         @NotBlank
         String cpf,
@@ -27,18 +27,15 @@ public record CustomerSaveDTO(
         @Email
         String email,
 
-        @Schema(description = "Data de nascimento do cliente.", example = "1998-05-22", required = true)
+        @Schema(description = "Data de nascimento do cliente.", example = "1998-05-22")
         @NotNull
         @Past
         LocalDate birthDate,
 
-        @Schema(description = "Objeto contendo os detalhes do endereço do cliente.", required = true)
+        @Schema(description = "Objeto contendo os detalhes do endereço do cliente.")
         @Valid
         @NotNull
         List<AddressSaveDTO> addresses
 ) {
-    public CustomerSaveDTO() {
-        this(null, null, null, null, null);
-    }
 
 }
