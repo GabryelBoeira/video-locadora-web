@@ -1,5 +1,6 @@
 package io.github.gabryel.videolocadora.service.customer;
 
+import io.github.gabryel.videolocadora.configuration.Messages;
 import io.github.gabryel.videolocadora.model.dto.customer.CustomerDetailDTO;
 import io.github.gabryel.videolocadora.model.dto.customer.CustomerSaveDTO;
 import io.github.gabryel.videolocadora.model.dto.page.PagedResponseDTO;
@@ -14,10 +15,12 @@ public class CustomerService {
 
     private final CustomerRepository customerRepository;
     private final CustomerMapper customerMapper;
+    private final Messages messages;
 
-    public CustomerService(CustomerRepository customerRepository, CustomerMapper customerMapper) {
+    public CustomerService(CustomerRepository customerRepository, CustomerMapper customerMapper, Messages messages) {
         this.customerRepository = customerRepository;
         this.customerMapper = customerMapper;
+        this.messages = messages;
     }
 
     /**
@@ -37,7 +40,8 @@ public class CustomerService {
      * @throws BusinessException if the customer is not found
      */
     public CustomerDetailDTO findById(Long id) throws BusinessException {
-        var entity = customerRepository.findById(id).orElseThrow(() -> new BusinessException("Customer not found"));
+        var entity = customerRepository.findById(id)
+                .orElseThrow(() -> new BusinessException(messages.getMessage("cliente.nao.encontrado.id")));
         return customerMapper.toDetailDTO(entity);
     }
 
@@ -67,7 +71,8 @@ public class CustomerService {
      * @return a list containing the customer found
      */
     public CustomerDetailDTO findByCpf(String cpf) throws BusinessException {
-        var entity = customerRepository.findByCpfEquals(cpf).orElseThrow(() -> new BusinessException("CPF not found"));
+        var entity = customerRepository.findByCpfEquals(cpf)
+                .orElseThrow(() -> new BusinessException(messages.getMessage("cliente.nao.encontrado.id")));
 
         return customerMapper.toDetailDTO(entity);
     }
