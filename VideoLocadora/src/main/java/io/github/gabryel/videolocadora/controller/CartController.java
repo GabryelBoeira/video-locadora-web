@@ -1,5 +1,6 @@
 package io.github.gabryel.videolocadora.controller;
 
+import io.github.gabryel.videolocadora.controller.api.CartApi;
 import io.github.gabryel.videolocadora.exception.BusinessException;
 import io.github.gabryel.videolocadora.model.dto.cart.CartAddItemDTO;
 import io.github.gabryel.videolocadora.model.dto.cart.CartCreateDTO;
@@ -17,8 +18,7 @@ import java.net.URI;
 
 @RestController
 @RequestMapping("/cart")
-@Tag(name = "Carrinho", description = "Operações de carrinho de compras")
-public class CartController {
+public class CartController implements CartApi {
 
     private final CartService cartService;
 
@@ -26,9 +26,7 @@ public class CartController {
         this.cartService = cartService;
     }
 
-    @PostMapping
-    @Operation(summary = "Criar novo carrinho", description = "Cria um carrinho de compras com sessão única")
-    @ApiResponse(responseCode = "201", description = "Carrinho criado")
+    @Override
     public ResponseEntity<CartDetailDTO> createCart(@Valid @RequestBody CartCreateDTO dto) throws BusinessException {
         var cart = cartService.createCart(dto);
         return ResponseEntity
@@ -36,18 +34,14 @@ public class CartController {
                 .body(cart);
     }
 
-    @GetMapping("/{sessionId}")
-    @Operation(summary = "Buscar carrinho", description = "Retorna carrinho ativo por sessionId")
-    @ApiResponse(responseCode = "200", description = "Carrinho encontrado")
+    @Override
     public ResponseEntity<CartDetailDTO> getCart(
             @Parameter(description = "Session ID do carrinho") @PathVariable String sessionId
     ) throws BusinessException {
         return ResponseEntity.ok(cartService.findBySessionId(sessionId));
     }
 
-    @PutMapping("/{sessionId}/items")
-    @Operation(summary = "Adicionar item ao carrinho", description = "Adiciona filme com reserva temporária (idempotente via movieId)")
-    @ApiResponse(responseCode = "200", description = "Item adicionado")
+    @Override
     public ResponseEntity<CartDetailDTO> addItem(
             @PathVariable String sessionId,
             @Valid @RequestBody CartAddItemDTO dto
@@ -57,9 +51,7 @@ public class CartController {
         return ResponseEntity.ok(cart);
     }
 
-    @DeleteMapping("/{sessionId}/items/{itemId}")
-    @Operation(summary = "Remover item do carrinho", description = "Remove item e libera estoque")
-    @ApiResponse(responseCode = "200", description = "Item removido")
+    @Override
     public ResponseEntity<CartDetailDTO> removeItem(
             @PathVariable String sessionId,
             @PathVariable Long itemId
@@ -68,9 +60,7 @@ public class CartController {
         return ResponseEntity.ok(cart);
     }
 
-    @PostMapping("/{sessionId}/checkout")
-    @Operation(summary = "Finalizar carrinho", description = "Converte carrinho em locação")
-    @ApiResponse(responseCode = "201", description = "Locação criada")
+    @Override
     public ResponseEntity<Void> checkout(@PathVariable String sessionId) throws BusinessException {
         Long rentalId = cartService.convertToRental(sessionId);
         return ResponseEntity

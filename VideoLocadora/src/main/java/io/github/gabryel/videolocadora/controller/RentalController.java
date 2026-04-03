@@ -1,5 +1,6 @@
 package io.github.gabryel.videolocadora.controller;
 
+import io.github.gabryel.videolocadora.controller.api.RentalApi;
 import io.github.gabryel.videolocadora.exception.BusinessException;
 import io.github.gabryel.videolocadora.model.dto.rental.RentalCreateDTO;
 import io.github.gabryel.videolocadora.model.dto.rental.RentalDetailDTO;
@@ -15,7 +16,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/rentals")
-public class RentalController {
+public class RentalController implements RentalApi {
 
     private final RentalService rentalService;
 
@@ -23,29 +24,29 @@ public class RentalController {
         this.rentalService = rentalService;
     }
 
-    @PostMapping
+    @Override
     public ResponseEntity<RentalDetailDTO> create(@Valid @RequestBody RentalCreateDTO dto) throws BusinessException {
         var created = rentalService.create(dto);
         return ResponseEntity.status(HttpStatus.CREATED).body(created);
     }
 
-    @GetMapping
+    @Override
     public ResponseEntity<List<RentalDetailDTO>> list() {
         return ResponseEntity.ok(rentalService.findAll());
     }
 
-    @GetMapping("/{id}")
+    @Override
     public ResponseEntity<RentalDetailDTO> getById(@PathVariable Long id) throws BusinessException {
         return ResponseEntity.ok(rentalService.findById(id));
     }
 
-    @PostMapping("/{id}/return")
+    @Override
     public ResponseEntity<Void> returnRental(@PathVariable Long id, @Valid @RequestBody RentalReturnDTO dto) throws BusinessException {
         rentalService.returnRental(id, dto);
         return ResponseEntity.noContent().build();
     }
 
-    @PostMapping("/{id}/items/{itemId}/return")
+    @Override
     public ResponseEntity<Void> returnRentalItem(
             @PathVariable Long id,
             @PathVariable Long itemId,

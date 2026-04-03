@@ -1,4 +1,4 @@
-package io.github.gabryel.videolocadora.controller;
+package io.github.gabryel.videolocadora.controller.advice;
 
 import io.github.gabryel.videolocadora.exception.BusinessException;
 import org.springframework.http.HttpStatus;
