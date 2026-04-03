@@ -72,7 +72,7 @@ public class CustomerService {
      */
     public CustomerDetailDTO findByCpf(String cpf) throws BusinessException {
         var entity = customerRepository.findByCpfEquals(cpf)
-                .orElseThrow(() -> new BusinessException(messages.getMessage("cliente.nao.encontrado.id")));
+                .orElseThrow(() -> new BusinessException(messages.getMessage("cliente.nao.encontrado.cpf")));
 
         return customerMapper.toDetailDTO(entity);
     }
