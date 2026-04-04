@@ -32,6 +32,8 @@ public class CustomerEntity implements Serializable {
     @Column(name = "delay_devolution")
     private boolean delayDevolution = false;
 
+    private Boolean enable;
+
     @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<AddressEntity> addresses = new ArrayList<>();
 
@@ -104,4 +106,11 @@ public class CustomerEntity implements Serializable {
         this.addresses = addresses;
     }
 
+    public Boolean getEnable() {
+        return enable;
+    }
+
+    public void setEnable(Boolean enable) {
+        this.enable = enable;
+    }
 }

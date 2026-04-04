@@ -1,5 +1,6 @@
 package io.github.gabryel.videolocadora.service;
 
+import io.github.gabryel.videolocadora.exception.CustomerException;
 import io.github.gabryel.videolocadora.model.dto.customer.CustomerSaveDTO;
 import io.github.gabryel.videolocadora.model.entity.CustomerEntity;
 import io.github.gabryel.videolocadora.model.mapper.address.AddressMapper;
@@ -35,7 +36,7 @@ class CustomerServiceTest {
     private CustomerMapper customerMapper;
 
     @Test
-    void save_ShouldPersistCustomerWithFullData() {
+    void save_ShouldPersistCustomerWithFullData() throws CustomerException {
         CustomerSaveDTO dto = utils.customerSaveDTO();
         CustomerEntity customerEntity = utils.customerEntity();
         when(customerMapper.toEntity(dto)).thenReturn(customerEntity);

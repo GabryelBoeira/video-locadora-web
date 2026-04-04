@@ -1,8 +1,9 @@
 package io.github.gabryel.videolocadora.controller.api;
 
-import io.github.gabryel.videolocadora.exception.BusinessException;
+import io.github.gabryel.videolocadora.exception.CustomerException;
 import io.github.gabryel.videolocadora.model.dto.customer.CustomerDetailDTO;
 import io.github.gabryel.videolocadora.model.dto.customer.CustomerSaveDTO;
+import io.github.gabryel.videolocadora.model.dto.customer.CustomerUpdateDTO;
 import io.github.gabryel.videolocadora.model.dto.page.PagedResponseDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -48,12 +49,12 @@ public interface CustomerApi {
     ResponseEntity<CustomerDetailDTO> getById(
             @Parameter(description = "ID do cliente", example = "1")
             @PathVariable Long id
-    ) throws BusinessException;
+    ) throws CustomerException;
 
     @PostMapping
     @Operation(summary = "Criar cliente", description = "Cria um novo cliente com os dados informados.")
     @ApiResponse(responseCode = "201", description = "Cliente criado com sucesso")
-    ResponseEntity<Void> createNewCustomer(@RequestBody CustomerSaveDTO createDto);
+    ResponseEntity<Void> createNewCustomer(@RequestBody CustomerSaveDTO createDto) throws CustomerException;
 
     @PutMapping("/{id}")
     @Operation(summary = "Atualizar cliente", description = "Atualiza um cliente existente com base no ID.")
@@ -64,8 +65,8 @@ public interface CustomerApi {
     ResponseEntity<Void> updateCustomer(
             @Parameter(description = "ID do cliente", example = "1")
             @PathVariable Long id,
-            @RequestBody CustomerSaveDTO updateDto
-    ) throws BusinessException;
+            @RequestBody CustomerUpdateDTO updateDto
+    ) throws CustomerException;
 
     @GetMapping("/cpf/{cpf}")
     @Operation(summary = "Buscar cliente por CPF", description = "Retorna um cliente específico com base no CPF.")
@@ -78,7 +79,21 @@ public interface CustomerApi {
             @ApiResponse(responseCode = "404", description = "Cliente não encontrado")
     })
     ResponseEntity<CustomerDetailDTO> getCustomerByCpf(
-            @Parameter(description = "CPF do cliente", example = "123.456.789-00")
+            @Parameter(description = "CPF do cliente", example = "12345678900")
             @PathVariable String cpf
-    ) throws BusinessException;
+    ) throws CustomerException;
+
+    @DeleteMapping("/{id}")
+    @Operation(summary = "Desativar cliente", description = "Desativa o cadastro do cliente.")
+    @ApiResponses({
+            @ApiResponse(
+                    responseCode = "204",
+                    description = "Cliente desativado com sucesso"
+            ),
+            @ApiResponse(responseCode = "404", description = "Cliente não encontrado")
+    })
+    ResponseEntity<Void> desactivateCustomer(
+            @Parameter(description = "ID do cliente", example = "1") @PathVariable Long id
+    ) throws CustomerException;
+    
 }

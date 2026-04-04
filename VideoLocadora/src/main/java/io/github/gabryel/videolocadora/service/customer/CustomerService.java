@@ -3,8 +3,9 @@ package io.github.gabryel.videolocadora.service.customer;
 import io.github.gabryel.videolocadora.configuration.Messages;
 import io.github.gabryel.videolocadora.model.dto.customer.CustomerDetailDTO;
 import io.github.gabryel.videolocadora.model.dto.customer.CustomerSaveDTO;
+import io.github.gabryel.videolocadora.model.dto.customer.CustomerUpdateDTO;
 import io.github.gabryel.videolocadora.model.dto.page.PagedResponseDTO;
-import io.github.gabryel.videolocadora.exception.BusinessException;
+import io.github.gabryel.videolocadora.exception.CustomerException;
 import io.github.gabryel.videolocadora.model.mapper.customer.CustomerMapper;
 import io.github.gabryel.videolocadora.repository.customer.CustomerRepository;
 import org.springframework.data.domain.Pageable;
@@ -28,7 +29,10 @@ public class CustomerService {
      *
      * @param createDto the customer to be saved
      */
-    public void save(CustomerSaveDTO createDto) {
+    public void save(CustomerSaveDTO createDto) throws CustomerException {
+        if (customerRepository.findByCpfEquals(createDto.cpf()).isPresent())
+            throw new CustomerException(messages.getMessage("cliente.cpf.duplicado"));
+
         customerRepository.save(customerMapper.toEntity(createDto));
     }
 
@@ -37,11 +41,11 @@ public class CustomerService {
      *
      * @param id the ID of the customer to be found
      * @return the customer found
-     * @throws BusinessException if the customer is not found
+     * @throws CustomerException if the customer is not found
      */
-    public CustomerDetailDTO findById(Long id) throws BusinessException {
+    public CustomerDetailDTO findById(Long id) throws CustomerException {
         var entity = customerRepository.findById(id)
-                .orElseThrow(() -> new BusinessException(messages.getMessage("cliente.nao.encontrado.id")));
+                .orElseThrow(() -> new CustomerException(messages.getMessage("cliente.nao.encontrado.id")));
         return customerMapper.toDetailDTO(entity);
     }
 
@@ -60,8 +64,12 @@ public class CustomerService {
      *
      * @param id the ID of the customer to be deleted
      */
-    public void delete(Long id) {
-        customerRepository.deleteById(id);
+    public void softDelete(Long id) throws CustomerException {
+        var entity = customerRepository.findById(id)
+                .orElseThrow(() -> new CustomerException(messages.getMessage("cliente.nao.encontrado.id")));
+        entity.setEnable(false);
+
+        customerRepository.save(entity);
     }
 
     /**
@@ -70,9 +78,9 @@ public class CustomerService {
      * @param cpf the customer's CPF
      * @return a list containing the customer found
      */
-    public CustomerDetailDTO findByCpf(String cpf) throws BusinessException {
+    public CustomerDetailDTO findByCpf(String cpf) throws CustomerException {
         var entity = customerRepository.findByCpfEquals(cpf)
-                .orElseThrow(() -> new BusinessException(messages.getMessage("cliente.nao.encontrado.cpf")));
+                .orElseThrow(() -> new CustomerException(messages.getMessage("cliente.nao.encontrado.cpf")));
 
         return customerMapper.toDetailDTO(entity);
     }
@@ -83,10 +91,11 @@ public class CustomerService {
      * @param id                the ID of the customer to be updated
      * @param customerUpdateDTO the customer to be updated
      */
-    public void update(Long id, CustomerSaveDTO customerUpdateDTO) throws BusinessException {
-        var entity = customerMapper.toEntity(customerUpdateDTO);
-        entity.setId(id);
-        customerRepository.save(entity);
+    public void update(final Long id, CustomerUpdateDTO customerUpdateDTO) throws CustomerException {
+        var entity = customerRepository.findById(id)
+                .orElseThrow(() -> new CustomerException(messages.getMessage("cliente.nao.encontrado.id")));
+
+        customerRepository.save(customerMapper.updateEntityFromDto(customerUpdateDTO, entity));
     }
 
 }

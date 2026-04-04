@@ -24,6 +24,7 @@ public class ObjectUtils {
         CustomerEntity customer = new CustomerEntity("João Silva", "12345678909", "teste@ig.com.br");
         customer.setId(1L);
         customer.addAddress(addressEntity());
+        customer.setEnable(true);
         return customer;
     }
 

@@ -2,11 +2,13 @@ package io.github.gabryel.videolocadora.model.mapper.customer;
 
 import io.github.gabryel.videolocadora.model.dto.customer.CustomerDetailDTO;
 import io.github.gabryel.videolocadora.model.dto.customer.CustomerSaveDTO;
+import io.github.gabryel.videolocadora.model.dto.customer.CustomerUpdateDTO;
 import io.github.gabryel.videolocadora.model.dto.page.PagedResponseDTO;
 import io.github.gabryel.videolocadora.model.entity.CustomerEntity;
 import io.github.gabryel.videolocadora.model.mapper.address.AddressMapper;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.MappingTarget;
 import org.mapstruct.Named;
 import org.springframework.data.domain.Page;
 
@@ -25,6 +27,9 @@ public interface CustomerMapper {
     @Mapping(target = "delayDevolution", ignore = true)
     @Mapping(source = "cpf", target = "cpf", qualifiedByName = "removeFormatCpf")
     CustomerEntity toEntity(CustomerSaveDTO customerSaveDTO);
+
+    @Mapping(target = "delayDevolution", ignore = true)
+    CustomerEntity updateEntityFromDto(CustomerUpdateDTO dto, @MappingTarget CustomerEntity entity);
 
     /**
      * Maps a page of customer entities to a page of customer detail DTOs.
