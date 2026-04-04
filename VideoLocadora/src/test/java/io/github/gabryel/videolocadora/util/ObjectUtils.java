@@ -4,6 +4,7 @@ import io.github.gabryel.videolocadora.model.dto.address.AddressDetailDTO;
 import io.github.gabryel.videolocadora.model.dto.address.AddressSaveDTO;
 import io.github.gabryel.videolocadora.model.dto.customer.CustomerDetailDTO;
 import io.github.gabryel.videolocadora.model.dto.customer.CustomerSaveDTO;
+import io.github.gabryel.videolocadora.model.dto.customer.CustomerUpdateDTO;
 import io.github.gabryel.videolocadora.model.entity.AddressEntity;
 import io.github.gabryel.videolocadora.model.entity.CustomerEntity;
 import org.springframework.stereotype.Component;
@@ -91,6 +92,15 @@ public class ObjectUtils {
      */
     public AddressSaveDTO addressSaveDTO() {
         return new AddressSaveDTO("Av. Paulista", "São Paulo", "SP", "Brasil", "01311-000", "Bela Vista", null, 1234);
+    }
+
+    /**
+     * Creates and returns a valid CustomerUpdateDTO object for testing purposes.
+     *
+     * @return a CustomerUpdateDTO with valid test data
+     */
+    public CustomerUpdateDTO customerUpdateDTO() {
+        return new CustomerUpdateDTO("João Silva", "teste@ig.com.br", LocalDate.now(), Collections.singletonList(addressSaveDTO()));
     }
 
 }
