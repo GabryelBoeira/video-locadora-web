@@ -11,6 +11,28 @@ services:
       - "3306:3306"
     volumes:
       - mysql-data:/var/lib/mysql
+      - ./docker/mysql/init:/docker-entrypoint-initdb.d
+
+  keycloak:
+    image: quay.io/keycloak/keycloak:latest
+    command: start-dev
+    restart: always
+    environment:
+      KC_DB: mysql
+      KC_DB_URL_HOST: db
+      KC_DB_URL_PORT: 3306
+      KC_DB_URL_DATABASE: keycloak
+      KC_DB_USERNAME: root
+      KC_DB_PASSWORD: root
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin
+      KC_HTTP_ENABLED: "true"
+      KC_HOSTNAME_STRICT: "false"
+      KC_HOSTNAME_STRICT_HTTPS: "false"
+    ports:
+      - "8081:8080"
+    depends_on:
+      - db
 
   app:
     build:
@@ -23,6 +45,7 @@ services:
       SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/videolocadora
       SPRING_DATASOURCE_USERNAME: root
       SPRING_DATASOURCE_PASSWORD: root
+      SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI: http://keycloak:8080/realms/videolocadora
     ports:
       - "8080:8080"
       - "5005:5005"
@@ -34,6 +57,7 @@ services:
     image: atkrad/wait4x
     depends_on:
       - db
+      - keycloak
     command: tcp db:3306 -t 30s -i 250ms
 
 volumes:
