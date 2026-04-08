@@ -12,11 +12,18 @@ services:
     volumes:
       - mysql-data:/var/lib/mysql
       - ./docker/mysql/init:/docker-entrypoint-initdb.d
+    healthcheck:
+      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost", "-proot" ]
+      interval: 5s
+      timeout: 5s
+      retries: 20
 
   keycloak:
     image: quay.io/keycloak/keycloak:latest
     command: start-dev
     restart: always
+    env_file:
+      - .env
     environment:
       KC_DB: mysql
       KC_DB_URL_HOST: db
@@ -24,15 +31,16 @@ services:
       KC_DB_URL_DATABASE: keycloak
       KC_DB_USERNAME: root
       KC_DB_PASSWORD: root
-      KEYCLOAK_ADMIN: admin
-      KEYCLOAK_ADMIN_PASSWORD: admin
+      KEYCLOAK_ADMIN: ${KEYCLOAK_ADMIN}
+      KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD}
       KC_HTTP_ENABLED: "true"
       KC_HOSTNAME_STRICT: "false"
       KC_HOSTNAME_STRICT_HTTPS: "false"
     ports:
       - "8081:8080"
     depends_on:
-      - db
+      db:
+        condition: service_healthy
 
   app:
     build:
@@ -50,15 +58,10 @@ services:
       - "8080:8080"
       - "5005:5005"
     depends_on:
-      wait-for-db:
-        condition: service_completed_successfully
-
-  wait-for-db:
-    image: atkrad/wait4x
-    depends_on:
-      - db
-      - keycloak
-    command: tcp db:3306 -t 30s -i 250ms
+      db:
+        condition: service_healthy
+      keycloak:
+        condition: service_started
 
 volumes:
   mysql-data:
