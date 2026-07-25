@@ -10,7 +10,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @SpringBootApplication
 public class VideoLocadoraApplication {
 
-    public static void main(String[] args) {
+    static void main(String[] args) {
         SpringApplication.run(VideoLocadoraApplication.class, args);
     }
 
