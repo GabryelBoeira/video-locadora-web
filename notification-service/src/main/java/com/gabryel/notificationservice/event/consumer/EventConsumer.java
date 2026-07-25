@@ -1,4 +1,4 @@
-package com.gabryel.notificationservice.client.kafka;
+package com.gabryel.notificationservice.event.consumer;
 
 
 import com.gabryel.notificationservice.dto.EventNotification;

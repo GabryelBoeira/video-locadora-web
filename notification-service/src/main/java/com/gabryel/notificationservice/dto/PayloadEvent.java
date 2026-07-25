@@ -8,6 +8,8 @@ public record PayloadEvent(
         Long rentalId,
         String customerName,
         String customerEmail,
+        String cellPhone,
+        String phone,
         BigDecimal totalPrice,
         LocalDateTime rentalDueAt,
         List<String> movieNames
