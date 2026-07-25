@@ -1,14 +1,15 @@
 package com.gabryel.notificationservice.dto;
 
-public record PayloadEvent (
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.util.List;
 
-        String email,
-
-         "rentalId": 20,
-                 "customerId": 1,
-                 "customerName": "Ana Silva",
-                 "customerEmail": "ana@email.com",
-                 "totalPrice": 42.90,
-                 "dueAt": "2026-07-31T12:10:00Z"
+public record PayloadEvent(
+        Long rentalId,
+        String customerName,
+        String customerEmail,
+        BigDecimal totalPrice,
+        LocalDateTime rentalDueAt,
+        List<String> movieNames
 ) {
 }
