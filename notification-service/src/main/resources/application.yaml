@@ -34,9 +34,9 @@ app:
       domain-events: ${APP_KAFKA_DOMAIN_EVENTS_TOPIC:videolocadora.domain-events}
 
 web-client:
-  connect-timeout-ms: ${ :3000}
-  read-write-timeout-sec: 10
-  response-timeout-sec: 10
+  connect-timeout-ms: ${WEBCLIENT_CONNECT_TIMEOUT_MS:3000}
+  read-write-timeout-sec:  ${WEBCLIENT_READ_WRITE_TIMEOUT_SEC:10}
+  response-timeout-sec: ${WEBCLIENT_RESPONSE_TIMEOUT_SEC:10}
 
 management:
   endpoints:

@@ -1,9 +1,10 @@
 package com.gabryel.notificationservice.config;
 
+import com.gabryel.notificationservice.config.properties.WebClientProperties;
 import io.netty.channel.ChannelOption;
 import io.netty.handler.timeout.ReadTimeoutHandler;
 import io.netty.handler.timeout.WriteTimeoutHandler;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.client.reactive.ClientHttpConnector;
@@ -17,16 +18,14 @@ import java.time.Duration;
 import java.util.concurrent.TimeUnit;
 
 @Configuration
+@EnableConfigurationProperties(WebClientProperties.class)
 public class WebClientConfiguration {
 
-    @Value("web-client.connect-timeout-ms")
-    private int connectTimeoutMs;
+    private final WebClientProperties props;
 
-    @Value("web-client.read-write-timeout-sec")
-    private int readWriteTimeoutSec;
-
-    @Value("web-client.response-timeout-sec")
-    private int responseTimeoutSec;
+    public WebClientConfiguration(WebClientProperties props) {
+        this.props = props;
+    }
 
     @Bean
     public WebClient genericWebClient() {
@@ -41,24 +40,25 @@ public class WebClientConfiguration {
 
     private HttpClient buildHttpClient() {
         return HttpClient.create(buildConnectionProvider())
-                .option(ChannelOption.CONNECT_TIMEOUT_MILLIS, connectTimeoutMs)
-                .responseTimeout(Duration.ofSeconds(responseTimeoutSec))
+                .option(ChannelOption.CONNECT_TIMEOUT_MILLIS, props.connectTimeoutMs())
+                .responseTimeout(Duration.ofSeconds(props.responseTimeoutSec()))
                 .doOnConnected(this::configureTimeouts);
     }
 
     private ConnectionProvider buildConnectionProvider() {
         return ConnectionProvider.builder("custom-connection-pool")
-                .maxConnections(500)
-                .maxIdleTime(Duration.ofSeconds(20))
-                .maxLifeTime(Duration.ofMinutes(5))
-                .pendingAcquireTimeout(Duration.ofSeconds(5))
-                .evictInBackground(Duration.ofSeconds(30))
+                .maxConnections(props.pool().maxConnections())
+                .maxIdleTime(Duration.ofSeconds(props.pool().maxIdleTimeSec()))
+                .maxLifeTime(Duration.ofMinutes(props.pool().maxLifeTimeMin()))
+                .pendingAcquireTimeout(Duration.ofSeconds(props.pool().pendingAcquireTimeoutSec()))
+                .evictInBackground(Duration.ofSeconds(props.pool().evictInBackgroundSec()))
                 .build();
     }
 
     private void configureTimeouts(Connection connection) {
-        connection.addHandlerLast(new ReadTimeoutHandler(readWriteTimeoutSec, TimeUnit.SECONDS))
-                .addHandlerLast(new WriteTimeoutHandler(readWriteTimeoutSec, TimeUnit.SECONDS));
+        connection
+                .addHandlerLast(new ReadTimeoutHandler(props.readWriteTimeoutSec(), TimeUnit.SECONDS))
+                .addHandlerLast(new WriteTimeoutHandler(props.readWriteTimeoutSec(), TimeUnit.SECONDS));
     }
 
 }
