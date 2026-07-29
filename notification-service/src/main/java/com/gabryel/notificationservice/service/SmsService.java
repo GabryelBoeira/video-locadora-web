@@ -6,18 +6,17 @@ import org.springframework.web.reactive.function.client.WebClient;
 @Service
 public class SmsService {
 
-    private final WebClient webClient;
+    private final WebClient smsWebClient;
 
-    public SmsService(WebClient.Builder webClientBuilder) {
-        // Exemplo hipotético usando a API do seu provedor de SMS
-        this.webClient = webClientBuilder.baseUrl("https://api.provedor-sms.com").build();
+    public SmsService( WebClient smsWebClient) {
+        this.smsWebClient = smsWebClient;
     }
 
     public void sendSms(String phoneNumber, String message) {
         // Monta o DTO exigido pelo provedor de SMS
         SmsRequest request = new SmsRequest(phoneNumber, message);
 
-        this.webClient.post()
+        this.smsWebClient.post()
                 .uri("/v1/send")
                 .header("Authorization", "Bearer SEU_TOKEN_AQUI")
                 .bodyValue(request)
@@ -26,5 +25,7 @@ public class SmsService {
                 .subscribe(); // Disparo assíncrono para não travar a thread do Kafka
     }
 
-    private record SmsRequest(String number, String text) {}
+    private record SmsRequest(String number, String text) {
+    }
+
 }

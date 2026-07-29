@@ -4,6 +4,7 @@ import com.gabryel.notificationservice.config.properties.WebClientProperties;
 import io.netty.channel.ChannelOption;
 import io.netty.handler.timeout.ReadTimeoutHandler;
 import io.netty.handler.timeout.WriteTimeoutHandler;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -28,7 +29,17 @@ public class WebClientConfiguration {
     }
 
     @Bean
-    public WebClient genericWebClient() {
+    @Qualifier("smsWebClient")
+    public WebClient smsWebClient() {
+        return WebClient.builder()
+                .clientConnector(createClientHttpConnector())
+                .baseUrl("https://api.provedor-sms.com")
+                .build();
+    }
+
+    @Bean
+    @Qualifier("webClient")
+    public WebClient webClient() {
         return WebClient.builder()
                 .clientConnector(createClientHttpConnector())
                 .build();
