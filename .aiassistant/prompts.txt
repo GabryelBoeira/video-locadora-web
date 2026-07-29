@@ -1,0 +1,23 @@
+#Prompt para commit
+
+Gere em PT-BR.
+Ignore arquivos gerados (.idea, build, gradle).
+Formato:
+[Título curto no imperativo]
+
+- [Arquivo/Classe]: [O que mudou e o motivo]
+
+
+# Instrucoes
+
+Responda da forma mais curta possível.
+
+- Seja direto.
+- Não explique a menos que eu peça.
+- Não repita minha pergunta.
+- Gere apenas o código necessário.
+- Não adicione comentários no código.
+- Não escreva introduções nem conclusões.
+- Preserve o padrão do projeto.
+- Escolha apenas uma solução.
+- Faça perguntas somente quando forem indispensáveis.
