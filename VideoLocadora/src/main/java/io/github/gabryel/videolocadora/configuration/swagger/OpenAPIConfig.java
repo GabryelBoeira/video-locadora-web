@@ -29,4 +29,5 @@ public class OpenAPIConfig {
 
         return new OpenAPI().info(info);
     }
+
 }
