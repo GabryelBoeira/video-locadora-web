@@ -4,11 +4,14 @@ import io.github.gabryel.videolocadora.configuration.Messages;
 import io.github.gabryel.videolocadora.model.dto.customer.CustomerDetailDTO;
 import io.github.gabryel.videolocadora.model.dto.customer.CustomerSaveDTO;
 import io.github.gabryel.videolocadora.model.dto.customer.CustomerUpdateDTO;
+import io.github.gabryel.videolocadora.model.dto.hateoas.Resource;
 import io.github.gabryel.videolocadora.model.dto.page.PagedResponseDTO;
 import io.github.gabryel.videolocadora.exception.CustomerException;
+import io.github.gabryel.videolocadora.model.entity.CustomerEntity;
 import io.github.gabryel.videolocadora.model.mapper.customer.CustomerMapper;
 import io.github.gabryel.videolocadora.repository.customer.CustomerRepository;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -24,16 +27,20 @@ public class CustomerService {
         this.messages = messages;
     }
 
+    public ResponseEntity<Resource<PagedResponseDTO<Resource<CustomerDetailDTO>>>> getAll(Pageable pageable) {
+        return ResponseEntity.ok(customerMapper.toPagedResponseDTO(customerRepository.findAll(pageable)));
+    }
+
     /**
      * Saves a customer.
      *
      * @param createDto the customer to be saved
      */
-    public void save(CustomerSaveDTO createDto) throws CustomerException {
+    public Long save(CustomerSaveDTO createDto) throws CustomerException {
         if (customerRepository.findByCpfEquals(createDto.cpf()).isPresent())
             throw new CustomerException(messages.getMessage("cliente.cpf.duplicado"));
 
-        customerRepository.save(customerMapper.toEntity(createDto));
+        return customerRepository.save(customerMapper.toEntity(createDto)).getId();
     }
 
     /**
@@ -91,11 +98,12 @@ public class CustomerService {
      * @param id                the ID of the customer to be updated
      * @param customerUpdateDTO the customer to be updated
      */
-    public void update(final Long id, CustomerUpdateDTO customerUpdateDTO) throws CustomerException {
+    public CustomerDetailDTO update(final Long id, CustomerUpdateDTO customerUpdateDTO) throws CustomerException {
         var entity = customerRepository.findById(id)
                 .orElseThrow(() -> new CustomerException(messages.getMessage("cliente.nao.encontrado.id")));
 
-        customerRepository.save(customerMapper.updateEntityFromDto(customerUpdateDTO, entity));
+        return customerMapper.toDetailDTO(customerRepository.save(customerMapper.updateEntityFromDto(customerUpdateDTO, entity)));
     }
+
 
 }

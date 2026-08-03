@@ -3,6 +3,7 @@ package io.github.gabryel.videolocadora.model.mapper.customer;
 import io.github.gabryel.videolocadora.model.dto.customer.CustomerDetailDTO;
 import io.github.gabryel.videolocadora.model.dto.customer.CustomerSaveDTO;
 import io.github.gabryel.videolocadora.model.dto.customer.CustomerUpdateDTO;
+import io.github.gabryel.videolocadora.model.dto.hateoas.Resource;
 import io.github.gabryel.videolocadora.model.dto.page.PagedResponseDTO;
 import io.github.gabryel.videolocadora.model.entity.CustomerEntity;
 import io.github.gabryel.videolocadora.model.mapper.address.AddressMapper;
@@ -22,6 +23,8 @@ public interface CustomerMapper {
 
     @Mapping(source = "cpf", target = "cpf", qualifiedByName = "addFormatCpf")
     CustomerDetailDTO toDetailDTO(CustomerEntity customerEntity);
+
+    Resource<PagedResponseDTO<Resource<CustomerDetailDTO>>> toPagedResponseDTO(Page<CustomerEntity> all);
 
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "delayDevolution", ignore = true)
