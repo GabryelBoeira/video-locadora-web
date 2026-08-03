@@ -1,6 +1,5 @@
 package io.github.gabryel.videolocadora.event.producer;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import io.github.gabryel.videolocadora.model.dto.event.EventNotification;
 import io.github.gabryel.videolocadora.model.dto.event.PayloadEvent;
 import io.github.gabryel.videolocadora.model.enums.EventTypeEnum;

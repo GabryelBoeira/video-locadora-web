@@ -41,12 +41,9 @@ public class JwtConfig {
 
         JwtAuthenticationConverter converter = new JwtAuthenticationConverter();
         converter.setJwtGrantedAuthoritiesConverter(jwt -> {
-            var authorities = new java.util.ArrayList<GrantedAuthority>();
 
             var defaultAuthorities = defaultConverter.convert(jwt);
-            if (defaultAuthorities != null) {
-                authorities.addAll(defaultAuthorities);
-            }
+            var authorities = new java.util.ArrayList<>(defaultAuthorities);
 
             var realmAuthorities = realmRoleConverter.convert(jwt);
             if (realmAuthorities != null) {

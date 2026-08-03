@@ -5,7 +5,7 @@ server:
 
 spring:
   application:
-    name: VideoLocadora
+    name: video-locadora
   servlet:
     encoding:
       force: true

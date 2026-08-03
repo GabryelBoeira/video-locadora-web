@@ -1,13 +1,12 @@
 package io.github.gabryel.videolocadora.service.customer;
 
 import io.github.gabryel.videolocadora.configuration.Messages;
+import io.github.gabryel.videolocadora.exception.CustomerException;
 import io.github.gabryel.videolocadora.model.dto.customer.CustomerDetailDTO;
 import io.github.gabryel.videolocadora.model.dto.customer.CustomerSaveDTO;
 import io.github.gabryel.videolocadora.model.dto.customer.CustomerUpdateDTO;
 import io.github.gabryel.videolocadora.model.dto.hateoas.Resource;
 import io.github.gabryel.videolocadora.model.dto.page.PagedResponseDTO;
-import io.github.gabryel.videolocadora.exception.CustomerException;
-import io.github.gabryel.videolocadora.model.entity.CustomerEntity;
 import io.github.gabryel.videolocadora.model.mapper.customer.CustomerMapper;
 import io.github.gabryel.videolocadora.repository.customer.CustomerRepository;
 import org.springframework.data.domain.Pageable;

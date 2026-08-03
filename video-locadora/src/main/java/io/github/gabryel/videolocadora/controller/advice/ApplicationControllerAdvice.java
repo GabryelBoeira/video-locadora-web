@@ -33,7 +33,7 @@ public class ApplicationControllerAdvice {
         var errors = new HashMap<>();
 
         ex.getBindingResult().getAllErrors()
-                .forEach((error) -> { errors.put(((FieldError) error).getField(), error.getDefaultMessage());});
+                .forEach((error) -> errors.put(((FieldError) error).getField(), error.getDefaultMessage()));
 
         return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(errors);
     }

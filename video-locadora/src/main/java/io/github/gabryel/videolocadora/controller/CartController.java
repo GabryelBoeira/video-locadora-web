@@ -6,13 +6,13 @@ import io.github.gabryel.videolocadora.model.dto.cart.CartAddItemDTO;
 import io.github.gabryel.videolocadora.model.dto.cart.CartCreateDTO;
 import io.github.gabryel.videolocadora.model.dto.cart.CartDetailDTO;
 import io.github.gabryel.videolocadora.service.cart.CartService;
-import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.net.URI;
 

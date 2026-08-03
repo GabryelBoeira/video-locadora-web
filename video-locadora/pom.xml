@@ -11,10 +11,10 @@
     </parent>
 
     <groupId>io.github.gabryel</groupId>
-    <artifactId>VideoLocadora</artifactId>
+    <artifactId>video-locadora</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>VideoLocadora</name>
-    <description>VideoLocadora</description>
+    <name>video-locadora</name>
+    <description>video-locadora</description>
     <packaging>${packaging}</packaging>
 
     <properties>

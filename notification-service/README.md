@@ -13,7 +13,7 @@ Inicialmente, eu faria ele apenas logar as notificações no console. Depois voc
 
 ```
 video-locadora-web/
-├── VideoLocadora/
+├── video-locadora/
 └── notification-service/
 ├── src/
 │   └── main/
