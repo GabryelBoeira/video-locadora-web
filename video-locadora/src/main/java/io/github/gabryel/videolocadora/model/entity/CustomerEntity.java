@@ -26,6 +26,9 @@ public class CustomerEntity implements Serializable {
 
     private String email;
 
+    @Column(name = "cell_phone")
+    private String cellPhone;
+
     @Column(name = "birth_date")
     private LocalDate birthDate;
 
@@ -113,4 +116,13 @@ public class CustomerEntity implements Serializable {
     public void setEnable(Boolean enable) {
         this.enable = enable;
     }
+
+    public String getCellPhone() {
+        return cellPhone;
+    }
+
+    public void setCellPhone(String cellPhone) {
+        this.cellPhone = cellPhone;
+    }
+
 }

@@ -14,6 +14,7 @@ public record CustomerDetailDTO(
         boolean delayDevolution,
         LocalDate birthDate,
         String email,
+        String cellPhone,
         List<AddressDetailDTO> addresses
 ) {
 
