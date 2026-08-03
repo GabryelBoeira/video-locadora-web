@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@Tag(name = "", description = "Gerenciar/Manipular dados de clientes")
+@Tag(name = "Aluguel", description = "Gerenciar/Manipular dados de Aluguel")
 public interface RentalApi {
 
     @PostMapping

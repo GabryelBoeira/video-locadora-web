@@ -40,7 +40,7 @@ public record ResourceCollection<T>(List<ResourceItem<T>> data,
         int totalPages = pagedResponse.totalPages() == 0 ? 1 : pagedResponse.totalPages();
 
         List<ResourceItem<T>> dataWithLinks = pagedResponse.content().stream()
-                .map(item -> new ResourceItem<T>(
+                .map(item -> new ResourceItem<>(
                         item,
                         LinkBuilder.from(basePath, idExtractor.apply(item)).crud().build()
                 ))

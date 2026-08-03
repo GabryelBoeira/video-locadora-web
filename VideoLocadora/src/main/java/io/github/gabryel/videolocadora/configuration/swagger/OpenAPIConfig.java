@@ -1,15 +1,20 @@
 package io.github.gabryel.videolocadora.configuration.swagger;
 
 import io.github.gabryel.videolocadora.configuration.Messages;
+import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.info.License;
+import io.swagger.v3.oas.models.security.SecurityRequirement;
+import io.swagger.v3.oas.models.security.SecurityScheme;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class OpenAPIConfig {
+
+    final String securitySchemeName = "bearerAuth";
 
     @Autowired
     private Messages messages;
@@ -27,7 +32,18 @@ public class OpenAPIConfig {
                 .version(messages.getMessage("swagger.version"))
                 .license(license);
 
-        return new OpenAPI().info(info);
+        Components components = new Components()
+                .addSecuritySchemes(securitySchemeName,
+                        new SecurityScheme()
+                                .name(securitySchemeName)
+                                .type(SecurityScheme.Type.HTTP)
+                                .scheme("bearer")
+                                .bearerFormat("JWT"));
+
+        return new OpenAPI()
+                .info(info)
+                .addSecurityItem(new SecurityRequirement().addList(securitySchemeName))
+                .components(components);
     }
 
 }

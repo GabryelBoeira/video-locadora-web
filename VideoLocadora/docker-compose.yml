@@ -17,6 +17,8 @@ services:
       interval: 5s
       timeout: 5s
       retries: 20
+    networks:
+      - locadora-net
 
   keycloak:
     image: quay.io/keycloak/keycloak:latest
@@ -41,8 +43,47 @@ services:
     depends_on:
       db:
         condition: service_healthy
+    networks:
+      - locadora-net
 
-  app:
+  kafka:
+    image: apache/kafka:latest
+    restart: always
+    ports:
+      - "9092:9092"
+    environment:
+      KAFKA_NODE_ID: 1
+      KAFKA_PROCESS_ROLES: broker,controller
+      KAFKA_CONTROLLER_QUORUM_VOTERS: 1@kafka:9093
+      KAFKA_LISTENERS: PLAINTEXT://:9092,CONTROLLER://:9093
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
+      KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+      KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - locadora-net
+
+  kafka-ui:
+    image: provectuslabs/kafka-ui:latest
+    restart: always
+    ports:
+      - "8090:8080"
+    environment:
+      KAFKA_CLUSTERS_0_NAME: local
+      KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka:9092
+    depends_on:
+      - kafka
+    networks:
+      - locadora-net
+
+  video-locadora:
     build:
       context: .
       dockerfile: Dockerfile
@@ -54,14 +95,23 @@ services:
       SPRING_DATASOURCE_USERNAME: root
       SPRING_DATASOURCE_PASSWORD: root
       SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI: http://keycloak:8080/realms/videolocadora
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:9092
     ports:
       - "8080:8080"
-      - "5005:5005"
+      - "5080:5080"
     depends_on:
       db:
         condition: service_healthy
       keycloak:
         condition: service_started
+      kafka:
+        condition: service_started
+    networks:
+      - locadora-net
 
 volumes:
   mysql-data:
+
+networks:
+  locadora-net:
+    driver: bridge

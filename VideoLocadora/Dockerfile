@@ -16,7 +16,7 @@ WORKDIR /app
 
 COPY --from=build /build/target/*.jar ./application.jar
 
-EXPOSE 5005
+EXPOSE 5080
 EXPOSE 8080
 
-ENTRYPOINT ["java", "--enable-native-access=ALL-UNNAMED", "-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005", "-jar", "application.jar"]
+ENTRYPOINT ["java", "--enable-native-access=ALL-UNNAMED", "-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5080", "-jar", "application.jar"]

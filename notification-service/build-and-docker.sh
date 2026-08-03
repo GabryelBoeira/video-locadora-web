@@ -11,14 +11,12 @@ if [ "$1" = "full" ]; then
     echo "==> [MODO FULL] Fazendo build completo (sem cache) de todos os serviços..."
     docker compose build --no-cache
 
-    echo "==> [MODO FULL] Subindo toda a stack..."
+    echo "==> [MODO FULL] Subindo toda a stack (Kafka, Kafka UI e Notification Service)..."
     docker compose up -d
 else
-    echo "==> [MODO BÁSICO] Atualizando e subindo apenas o serviço 'video-locadora'..."
-    docker compose build video-locadora
-    docker compose up -d video-locadora
+    echo "==> [MODO BÁSICO] Atualizando e subindo apenas o notification-service..."
+    docker compose build notification-service
+    docker compose up -d notification-service
 fi
 
-echo "==> Pronto!"
-echo "App: http://localhost:8080/videolocadora"
-echo "Swagger: http://localhost:8080/videolocadora/swagger-ui/index.html"
+echo "==> Operação concluída com sucesso!"
