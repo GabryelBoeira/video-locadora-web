@@ -41,15 +41,15 @@ O projeto foi reestruturado com foco em modernização, adotando versões recent
 
 ## Arquitetura
 
-A aplicação segue uma estrutura orientada a camadas, separando responsabilidades entre:
+A aplicação segue uma arquitetura monolítica organizada em camadas:
 
-- camada de apresentação;
-- camada de serviço;
-- camada de persistência;
-- entidades de domínio;
-- configuração e infraestrutura.
-- camada de testes.
-- camada de client para servicos externos.
+- `controller`: exposição dos endpoints REST;
+- `service`: regras de negócio;
+- `repository`: acesso a dados;
+- `model`: entidades, DTOs, enums e mappers;
+- `configuration`: configurações da aplicação;
+- `exception`: tratamento de exceções;
+- `event`: produção de eventos internos.
 
 Esse modelo facilita evolução do sistema, testes e manutenção.
 

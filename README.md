@@ -11,12 +11,17 @@ A aplicação foi pensada para simular os principais fluxos de uma locadora digi
 
 Além de atender às regras de negócio, o projeto também foi estruturado para demonstrar:
 
-- evolução de código legado para uma base mais organizada;
+- modernização de código legado;
+- organização em camadas;
 - separação de responsabilidades;
-- uso de padrões e boas práticas com Spring;
+- persistência com banco relacional;
 - documentação automática da API;
-- integração com autenticação baseada em identidade;
-- facilidade de execução local com containers.
+- autenticação e autorização com Keycloak;
+- execução local simplificada com Docker.
+- Utilização de padrões e boas práticas com Spring.
+- Comunicação entre microserviços utilizando eventos (Kafka).
+- Utilizacao de Spring WebFlux para envio assíncrono de eventos(email/sms).
+- Utilizacao do Restful com os três níveis de abstração.
 
 ## Funcionalidades do sistema
 
@@ -43,6 +48,8 @@ Entre os principais recursos da aplicação, destacam-se:
 - **Docker e Docker Compose**
 - **IntelliJ IDEA**
 - **Arquitetura monolítica**
+- **Spring WebFlux**
+- **Kafka**
 
 ## Objetivo da refatoração
 
