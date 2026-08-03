@@ -37,6 +37,12 @@ web-client:
   connect-timeout-ms: ${WEBCLIENT_CONNECT_TIMEOUT_MS:3000}
   read-write-timeout-sec:  ${WEBCLIENT_READ_WRITE_TIMEOUT_SEC:10}
   response-timeout-sec: ${WEBCLIENT_RESPONSE_TIMEOUT_SEC:10}
+  pool:
+    maxConnections: 100
+    maxIdleTimeSec: 300
+    maxLifeTimeMin: 60
+    pendingAcquireTimeoutSec: 30
+    evictInBackgroundSec: 60
 
 management:
   endpoints:
