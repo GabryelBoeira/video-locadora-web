@@ -22,7 +22,7 @@ services:
 
   keycloak:
     image: quay.io/keycloak/keycloak:latest
-    command: start-dev
+    command: start-dev --import-realm
     restart: always
     env_file:
       - .env
@@ -33,13 +33,15 @@ services:
       KC_DB_URL_DATABASE: keycloak
       KC_DB_USERNAME: root
       KC_DB_PASSWORD: root
-      KEYCLOAK_ADMIN: ${KEYCLOAK_ADMIN}
-      KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD}
+      KC_BOOTSTRAP_ADMIN_USERNAME: ${KEYCLOAK_ADMIN}
+      KC_BOOTSTRAP_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD}
       KC_HTTP_ENABLED: "true"
       KC_HOSTNAME_STRICT: "false"
       KC_HOSTNAME_STRICT_HTTPS: "false"
     ports:
       - "8081:8080"
+    volumes:
+      - ./docker/keycloak/realm-export.json:/opt/keycloak/data/import/realm-export.json
     depends_on:
       db:
         condition: service_healthy
@@ -94,8 +96,9 @@ services:
       SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/videolocadora
       SPRING_DATASOURCE_USERNAME: root
       SPRING_DATASOURCE_PASSWORD: root
-      SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI: http://keycloak:8080/realms/videolocadora
       SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:9092
+      KEYCLOAK_URI: http://keycloak:8080/realms/videolocadora
+      KEYCLOAK_CERTS_URI: http://keycloak:8080/realms/video-locadora/protocol/openid-connect/certs
     ports:
       - "8080:8080"
       - "5080:5080"

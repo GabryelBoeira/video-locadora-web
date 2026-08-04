@@ -37,14 +37,13 @@ public class SecurityConfig {
     }
 
     private void configureAuthorizationRules(AuthorizeHttpRequestsConfigurer<HttpSecurity>.AuthorizationManagerRequestMatcherRegistry auth) {
-
         auth.requestMatchers(PUBLIC_ROUTES).permitAll()
-                .requestMatchers(HttpMethod.GET, "/clientes/**").hasAnyAuthority("adm_cust_r", "cust_r")
-                .requestMatchers(HttpMethod.POST, "/clientes/**").hasAuthority("adm_cust_c")
-                .requestMatchers(HttpMethod.PUT, "/clientes/**").hasAnyAuthority("adm_cust_u", "cust_u")
-                .requestMatchers(HttpMethod.DELETE, "/clientes/**").hasAuthority("adm_cust_d")
+                .requestMatchers(HttpMethod.GET, "/customer/**").hasAnyAuthority("adm_cust_r", "cust_r")
+                .requestMatchers(HttpMethod.POST, "/customer/**").hasAuthority("adm_cust_c")
+                .requestMatchers(HttpMethod.PUT, "/customer/**").hasAnyAuthority("adm_cust_u", "cust_u")
+                .requestMatchers(HttpMethod.DELETE, "/customer/**").hasAuthority("adm_cust_d")
 
-                //Requer autenticação para acesso sem nenhum privilégio
+                // Requer autenticação para acesso sem nenhum privilégio
                 .anyRequest().authenticated();
     }
 

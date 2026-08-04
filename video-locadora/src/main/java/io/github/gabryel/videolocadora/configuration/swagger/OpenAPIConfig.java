@@ -5,8 +5,7 @@ import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.info.License;
-import io.swagger.v3.oas.models.security.SecurityRequirement;
-import io.swagger.v3.oas.models.security.SecurityScheme;
+import io.swagger.v3.oas.models.security.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -15,7 +14,8 @@ import org.springframework.context.annotation.Configuration;
 public class OpenAPIConfig {
 
     final String securitySchemeName = "bearerAuth";
-
+    private static final String AUTH_URL = "http://localhost:8081/realms/video-locadora/protocol/openid-connect/auth";
+    private static final String TOKEN_URL = "http://localhost:8081/realms/video-locadora/protocol/openid-connect/token";
     @Autowired
     private Messages messages;
 
@@ -32,18 +32,22 @@ public class OpenAPIConfig {
                 .version(messages.getMessage("swagger.version"))
                 .license(license);
 
-        Components components = new Components()
-                .addSecuritySchemes(securitySchemeName,
-                        new SecurityScheme()
-                                .name(securitySchemeName)
-                                .type(SecurityScheme.Type.HTTP)
-                                .scheme("bearer")
-                                .bearerFormat("JWT"));
-
         return new OpenAPI()
                 .info(info)
                 .addSecurityItem(new SecurityRequirement().addList(securitySchemeName))
-                .components(components);
+                .components(components());
+    }
+
+    private Components components() {
+        return new Components()
+                .addSecuritySchemes(securitySchemeName,
+                        new SecurityScheme()
+                                .name(securitySchemeName)
+                                .type(SecurityScheme.Type.OAUTH2)
+                                .flows(new OAuthFlows()
+                                        .authorizationCode(new OAuthFlow()
+                                                .authorizationUrl(AUTH_URL)
+                                                .tokenUrl(TOKEN_URL))));
     }
 
 }

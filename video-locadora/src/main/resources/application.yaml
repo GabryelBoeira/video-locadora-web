@@ -38,7 +38,8 @@ spring:
     oauth2:
       resourceserver:
         jwt:
-          issuer-uri: ${SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI}
+          issuer-uri: ${KEYCLOAK_URI}
+          jwk-set-uri: ${KEYCLOAK_CERTS_URI}
   kafka:
     bootstrap-servers: ${SPRING_KAFKA_BOOTSTRAP_SERVERS:localhost:9092}
     producer:
@@ -56,3 +57,15 @@ app:
   kafka:
     topics:
       domain-events: ${SPRING_KAFKA_TOPICS_DOMAIN_EVENTS:videolocadora.domain-events}
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+    oauth:
+      client-id: swagger-client
+
+logging:
+  level:
+    org.springframework.security: TRACE
+    org.springframework.security.oauth2: TRACE
+    org.springframework.web: DEBUG
