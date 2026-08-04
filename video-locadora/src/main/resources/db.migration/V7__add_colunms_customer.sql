@@ -1,1 +1,1 @@
-ALTER TABLE customer ADD COLUMN cell_phone VARCHAR(20);
+ALTER TABLE customer ADD COLUMN cell_phone VARCHAR(20) COMMENT 'numeoro celular';
