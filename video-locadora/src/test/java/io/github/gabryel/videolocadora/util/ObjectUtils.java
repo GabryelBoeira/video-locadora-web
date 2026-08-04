@@ -55,7 +55,7 @@ public class ObjectUtils {
      * @return a CustomerDetailDTO with valid test data
      */
     public CustomerDetailDTO customerDetailDTO() {
-        return new CustomerDetailDTO(1L, "João Silva", "123.456.789-09", false, LocalDate.now(),"teste@ig.com.br", Collections.singletonList(addressDetailDTO()));
+        return new CustomerDetailDTO(1L, "João Silva", "123.456.789-09", false, LocalDate.now(),"teste@ig.com.br", "+5541988888888",Collections.singletonList(addressDetailDTO()));
     }
 
     /**
@@ -82,7 +82,7 @@ public class ObjectUtils {
      * @return a CustomerSaveDTO with valid test data
      */
     public CustomerSaveDTO customerSaveDTO() {
-        return new CustomerSaveDTO("João Silva", "123.456.789-09", "teste@ig.com.br", LocalDate.now(), Collections.singletonList(addressSaveDTO()));
+        return new CustomerSaveDTO("João Silva", "123.456.789-09", "teste@ig.com.br", LocalDate.now(),"+5541988888888", Collections.singletonList(addressSaveDTO()));
     }
 
     /**
@@ -100,7 +100,7 @@ public class ObjectUtils {
      * @return a CustomerUpdateDTO with valid test data
      */
     public CustomerUpdateDTO customerUpdateDTO() {
-        return new CustomerUpdateDTO("João Silva", "teste@ig.com.br", LocalDate.now(), Collections.singletonList(addressSaveDTO()));
+        return new CustomerUpdateDTO("João Silva", "teste@ig.com.br", LocalDate.now(),"+5541988888888", Collections.singletonList(addressSaveDTO()));
     }
 
 }
