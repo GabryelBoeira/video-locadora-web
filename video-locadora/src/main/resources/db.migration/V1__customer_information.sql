@@ -5,7 +5,7 @@ CREATE TABLE customer
     cpf              VARCHAR(11) NULL COMMENT 'CPF',
     email            VARCHAR(255) NULL COMMENT 'Email',
     delay_devolution BIT(1) NULL COMMENT 'Tem atraso em alguma devolução',
-    enable           BOOLEAN DEFAULT COMMENT 'usuario ativo',
+    enable           BOOLEAN COMMENT 'usuario ativo',
     CONSTRAINT pk_customer PRIMARY KEY (id)
 );
 
