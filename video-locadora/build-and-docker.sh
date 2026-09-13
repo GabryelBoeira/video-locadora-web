@@ -4,19 +4,21 @@ set -e
 # Sempre roda a partir da pasta do script
 cd "$(dirname "$0")"
 
+COMPOSE_FILE="docker-compose-local.yml"
+
 if [ "$1" = "full" ]; then
     echo "==> [MODO FULL] Parando tudo, removendo volumes e limpando containers antigos..."
-    docker compose down --volumes --remove-orphans
+    docker compose -f "$COMPOSE_FILE" down --volumes --remove-orphans
 
     echo "==> [MODO FULL] Fazendo build completo (sem cache) de todos os serviços..."
-    docker compose build --no-cache
+    docker compose -f "$COMPOSE_FILE" build --no-cache
 
     echo "==> [MODO FULL] Subindo toda a stack..."
-    docker compose up -d
+    docker compose -f "$COMPOSE_FILE" up -d
 else
     echo "==> [MODO BÁSICO] Atualizando e subindo apenas o serviço 'video-locadora'..."
-    docker compose build video-locadora
-    docker compose up -d video-locadora
+    docker compose -f "$COMPOSE_FILE" build video-locadora
+    docker compose -f "$COMPOSE_FILE" up -d video-locadora
 fi
 
 echo "==> Pronto!"

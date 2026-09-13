@@ -8,7 +8,7 @@ Write-Host "==> Docker build (Maven roda dentro do Dockerfile)"
 docker build -t videolocadora:latest .
 
 Write-Host "==> Subir com docker compose"
-docker compose up --build -d
+docker compose -f $ComposeFile up --build -d
 
 Write-Host "==> Pronto!"
 Write-Host "Imagem: videolocadora:latest"

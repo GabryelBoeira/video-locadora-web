@@ -11,7 +11,7 @@ services:
       - "3306:3306"
     volumes:
       - mysql-data:/var/lib/mysql
-      - ./docker/mysql/init:/docker-entrypoint-initdb.d
+      - ../docker/mysql/init:/docker-entrypoint-initdb.d
     healthcheck:
       test: [ "CMD", "mysqladmin", "ping", "-h", "localhost", "-proot" ]
       interval: 5s
@@ -40,8 +40,10 @@ services:
       KC_HOSTNAME_STRICT_HTTPS: "false"
     ports:
       - "8081:8080"
+    mem_limit: 750m
+    mem_reservation: 350m
     volumes:
-      - ./docker/keycloak/realm-export.json:/opt/keycloak/data/import/realm-export.json
+      - ../docker/keycloak/realm-export.json:/opt/keycloak/data/import/realm-export.json
     depends_on:
       db:
         condition: service_healthy
@@ -66,6 +68,8 @@ services:
       KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
       KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
       KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"
+    mem_limit: 1024m
+    mem_reservation: 512m
     depends_on:
       db:
         condition: service_healthy
@@ -80,6 +84,7 @@ services:
     environment:
       KAFKA_CLUSTERS_0_NAME: local
       KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka:9092
+    mem_limit: 512m
     depends_on:
       - kafka
     networks:
@@ -91,17 +96,21 @@ services:
       dockerfile: Dockerfile
     image: videolocadora
     restart: always
+    ports:
+      - "8080:8080"
+      - "5080:5080"
     environment:
       TZ: America/Sao_Paulo
       SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/videolocadora
       SPRING_DATASOURCE_USERNAME: root
       SPRING_DATASOURCE_PASSWORD: root
       SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:9092
-      KEYCLOAK_URI: http://keycloak:8080/realms/videolocadora
+      KEYCLOAK_URI: http://keycloak:8080/realms/video-locadora
       KEYCLOAK_CERTS_URI: http://keycloak:8080/realms/video-locadora/protocol/openid-connect/certs
-    ports:
-      - "8080:8080"
-      - "5080:5080"
+      JAVA_TOOL_OPTIONS: >
+        -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5080
+    mem_limit: 1024m
+    mem_reservation: 512m
     depends_on:
       db:
         condition: service_healthy
