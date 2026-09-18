@@ -1,15 +1,22 @@
 $ErrorActionPreference = "Stop"
 
-# Sempre roda a partir da pasta onde o script está (VideoLocadora)
 $ScriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
 Set-Location $ScriptDir
 
-Write-Host "==> Docker build (Maven roda dentro do Dockerfile)"
-docker build -t videolocadora:latest .
+$InfraComposeFile = "../docker/docker-compose-infra.yml"
+$AppComposeFile = "docker-compose-local.yml"
 
-Write-Host "==> Subir com docker compose"
-docker compose -f $ComposeFile up --build -d
+if ($args[0] -eq "full") {
+    Write-Host "==> [FULL] Subindo infra..."
+    docker compose -f $InfraComposeFile up -d
+
+    Write-Host "==> [FULL] Buildando e subindo aplicação..."
+    docker compose -f $AppComposeFile up -d --build
+} else {
+    Write-Host "==> [APP] Buildando e reiniciando apenas a aplicação..."
+    docker compose -f $AppComposeFile up -d --build video-locadora
+}
 
 Write-Host "==> Pronto!"
-Write-Host "Imagem: videolocadora:latest"
 Write-Host "App: http://localhost:8080/videolocadora"
+Write-Host "Swagger: http://localhost:8080/videolocadora/swagger-ui/index.html"
