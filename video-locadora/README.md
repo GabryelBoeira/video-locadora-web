@@ -91,3 +91,12 @@ Após a aplicação subir, acesse:
 - http://localhost:8080/videolocadora/swagger-ui/index.html
 - http://localhost:8080/videolocadora/v3/api-docs
 
+
+## Acessar o Token 
+  
+curl -s -X POST "http://localhost:8081/realms/video-locadora/protocol/openid-connect/token" \
+-H "Content-Type: application/x-www-form-urlencoded" \
+-d "grant_type=password" \
+-d "client_id=swagger-client" \
+-d "username=teste@gmail.com" \
+-d "password=123456" | jq -r '.access_token'
