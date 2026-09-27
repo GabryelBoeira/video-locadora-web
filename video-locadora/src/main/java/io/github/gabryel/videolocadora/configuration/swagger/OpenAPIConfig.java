@@ -13,9 +13,8 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class OpenAPIConfig {
 
-    final String securitySchemeName = "bearerAuth";
-    private static final String AUTH_URL = "http://localhost:8081/realms/video-locadora/protocol/openid-connect/auth";
-    private static final String TOKEN_URL = "http://localhost:8081/realms/video-locadora/protocol/openid-connect/token";
+    private static final String SECURITY_SCHEME_NAME = "bearerAuth";
+
     @Autowired
     private Messages messages;
 
@@ -34,20 +33,18 @@ public class OpenAPIConfig {
 
         return new OpenAPI()
                 .info(info)
-                .addSecurityItem(new SecurityRequirement().addList(securitySchemeName))
+                .addSecurityItem(new SecurityRequirement().addList(SECURITY_SCHEME_NAME))
                 .components(components());
     }
 
     private Components components() {
         return new Components()
-                .addSecuritySchemes(securitySchemeName,
+                .addSecuritySchemes(SECURITY_SCHEME_NAME,
                         new SecurityScheme()
-                                .name(securitySchemeName)
-                                .type(SecurityScheme.Type.OAUTH2)
-                                .flows(new OAuthFlows()
-                                        .authorizationCode(new OAuthFlow()
-                                                .authorizationUrl(AUTH_URL)
-                                                .tokenUrl(TOKEN_URL))));
+                                .name("Authorization")
+                                .type(SecurityScheme.Type.HTTP)
+                                .scheme("bearer")
+                                .bearerFormat("JWT"));
     }
 
 }

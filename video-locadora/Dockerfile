@@ -9,7 +9,7 @@ RUN sed -i 's/\r$//' mvnw && chmod +x mvnw
 RUN ./mvnw -q -DskipTests dependency:go-offline
 
 COPY ["src/", "src/"]
-RUN ./mvnw -q clean package -DskipTests
+RUN ./mvnw clean package -DskipTests
 
 FROM eclipse-temurin:25-jre
 WORKDIR /app

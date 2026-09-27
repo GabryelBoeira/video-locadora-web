@@ -29,7 +29,7 @@ public interface CustomerMapper {
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "delayDevolution", ignore = true)
     @Mapping(source = "cpf", target = "cpf", qualifiedByName = "removeFormatCpf")
-    @Mapping(target = "enable", defaultValue = "true")
+    @Mapping(target = "enable", constant = "true")
     CustomerEntity toEntity(CustomerSaveDTO customerSaveDTO);
 
     @Mapping(target = "delayDevolution", ignore = true)

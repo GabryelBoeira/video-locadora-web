@@ -1,5 +1,6 @@
 services:
   notification-service:
+    container_name: notification-service
     build:
       context: ../notification-service
       dockerfile: Dockerfile
@@ -8,6 +9,7 @@ services:
     env_file:
       - .env
     environment:
+      SPRING_OUTPUT_ANSI_ENABLED: always
       TZ: America/Sao_Paulo
       JAVA_TOOL_OPTIONS: >
         --enable-native-access=ALL-UNNAMED
