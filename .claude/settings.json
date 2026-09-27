@@ -1,0 +1,43 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git status*)",
+      "Bash(git log*)",
+      "Bash(git diff*)",
+      "Bash(git branch*)",
+      "Bash(find *)",
+      "Bash(ls *)",
+      "Bash(grep *)",
+      "Bash(wc *)",
+      "Bash(jq *)",
+      "Read"
+    ]
+  },
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "prompt",
+            "if": "Edit(CLAUDE.md)",
+            "prompt": "O arquivo CLAUDE.md foi alterado. Verifique se a alteração precisa ser propagada para os outros CLAUDE.md do workspace (raiz, video-locadora, notification-service). Se sim, informe o usuário sobre o que deve ser atualizado nos outros projetos. Contexto: $ARGUMENTS",
+            "statusMessage": "Verificando consistência dos CLAUDE.md..."
+          }
+        ]
+      },
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "if": "Edit(.claude/settings.json)",
+            "command": "jq -r '.tool_response.filePath // .tool_input.file_path' | { read -r f; jq -e . \"$f\" > /dev/null 2>&1 && echo '{\"hookSpecificOutput\": {\"hookEventName\": \"PostToolUse\", \"additionalContext\": \"settings.json validado com sucesso.\"}}' || echo '{\"hookSpecificOutput\": {\"hookEventName\": \"PostToolUse\", \"additionalContext\": \"ERRO: settings.json com JSON invalido! Corrija antes de continuar.\"}}'; }",
+            "timeout": 5,
+            "statusMessage": "Validando settings.json..."
+          }
+        ]
+      }
+    ]
+  }
+}
