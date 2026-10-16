@@ -2,12 +2,13 @@ package io.github.gabryel.videolocadora.service.movie;
 
 import io.github.gabryel.videolocadora.model.dto.movie.MovieDetailDTO;
 import io.github.gabryel.videolocadora.model.dto.movie.MovieSaveDTO;
+import io.github.gabryel.videolocadora.model.dto.page.PagedResponseDTO;
 import io.github.gabryel.videolocadora.model.entity.MovieEntity;
 import io.github.gabryel.videolocadora.model.mapper.movie.MovieMapper;
 import io.github.gabryel.videolocadora.repository.MovieRepository;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -26,10 +27,9 @@ public class MovieService {
         return movieMapper.toDetailDto(movieRepository.save(movieEntity));
     }
 
-    public List<MovieDetailDTO> findAll() {
-        return movieRepository.findAll().stream()
-                .map(movieMapper::toDetailDto)
-                .toList();
+    public PagedResponseDTO<MovieDetailDTO> findAllPaginated(Pageable pageable) {
+        var result = movieRepository.findAll(pageable);
+        return movieMapper.toDetailPage(result);
     }
 
     public MovieDetailDTO findById(Long id) {
@@ -52,12 +52,6 @@ public class MovieService {
         }
 
         return false;
-    }
-
-    public List<MovieDetailDTO> findAllMovies() {
-        return movieRepository.findAll().stream()
-                .map(movieMapper::toDetailDto)
-                .toList();
     }
 
 }

@@ -2,6 +2,7 @@ package io.github.gabryel.videolocadora.service.rent;
 
 import io.github.gabryel.videolocadora.configuration.Messages;
 import io.github.gabryel.videolocadora.exception.BusinessException;
+import io.github.gabryel.videolocadora.model.dto.page.PagedResponseDTO;
 import io.github.gabryel.videolocadora.model.dto.rental.RentalCreateDTO;
 import io.github.gabryel.videolocadora.model.dto.rental.RentalDetailDTO;
 import io.github.gabryel.videolocadora.model.dto.rental.RentalItemReturnDTO;
@@ -14,13 +15,13 @@ import io.github.gabryel.videolocadora.repository.MovieRepository;
 import io.github.gabryel.videolocadora.repository.RentalRepository;
 import io.github.gabryel.videolocadora.repository.customer.CustomerRepository;
 import jakarta.transaction.Transactional;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.Period;
 import java.time.ZoneId;
-import java.util.List;
 
 
 @Service
@@ -109,10 +110,9 @@ public class RentalService {
         return rentalMapper.toDetailDTO(saved);
     }
 
-    public List<RentalDetailDTO> findAll() {
-        return rentalRepository.findAll().stream()
-                .map(rentalMapper::toDetailDTO)
-                .toList();
+    public PagedResponseDTO<RentalDetailDTO> findAllPaginated(Pageable pageable) {
+        var result = rentalRepository.findAll(pageable);
+        return rentalMapper.toDetailPage(result);
     }
 
     public RentalDetailDTO findById(Long id) throws BusinessException {
