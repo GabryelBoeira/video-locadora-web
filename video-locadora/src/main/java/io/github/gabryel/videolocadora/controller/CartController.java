@@ -5,6 +5,8 @@ import io.github.gabryel.videolocadora.exception.BusinessException;
 import io.github.gabryel.videolocadora.model.dto.cart.CartAddItemDTO;
 import io.github.gabryel.videolocadora.model.dto.cart.CartCreateDTO;
 import io.github.gabryel.videolocadora.model.dto.cart.CartDetailDTO;
+import io.github.gabryel.videolocadora.model.dto.hateoas.Resource;
+import io.github.gabryel.videolocadora.model.mapper.hateoas.LinkBuilder;
 import io.github.gabryel.videolocadora.service.cart.CartService;
 import io.swagger.v3.oas.annotations.Parameter;
 import jakarta.validation.Valid;
@@ -27,37 +29,37 @@ public class CartController implements CartApi {
     }
 
     @Override
-    public ResponseEntity<CartDetailDTO> createCart(@Valid @RequestBody CartCreateDTO dto) throws BusinessException {
+    public ResponseEntity<Resource<CartDetailDTO>> createCart(@Valid @RequestBody CartCreateDTO dto) throws BusinessException {
         var cart = cartService.createCart(dto);
         return ResponseEntity
                 .created(URI.create("/cart/" + cart.sessionId()))
-                .body(cart);
+                .body(toResource(cart));
     }
 
     @Override
-    public ResponseEntity<CartDetailDTO> getCart(
+    public ResponseEntity<Resource<CartDetailDTO>> getCart(
             @Parameter(description = "Session ID do carrinho") @PathVariable String sessionId
     ) throws BusinessException {
-        return ResponseEntity.ok(cartService.findBySessionId(sessionId));
+        return ResponseEntity.ok(toResource(cartService.findBySessionId(sessionId)));
     }
 
     @Override
-    public ResponseEntity<CartDetailDTO> addItem(
+    public ResponseEntity<Resource<CartDetailDTO>> addItem(
             @PathVariable String sessionId,
             @Valid @RequestBody CartAddItemDTO dto
     ) throws BusinessException {
         // Idempotência: se o filme já está no carrinho, retorna 409
         var cart = cartService.addItem(sessionId, dto);
-        return ResponseEntity.ok(cart);
+        return ResponseEntity.ok(toResource(cart));
     }
 
     @Override
-    public ResponseEntity<CartDetailDTO> removeItem(
+    public ResponseEntity<Resource<CartDetailDTO>> removeItem(
             @PathVariable String sessionId,
             @PathVariable Long itemId
     ) throws BusinessException {
         var cart = cartService.removeItem(sessionId, itemId);
-        return ResponseEntity.ok(cart);
+        return ResponseEntity.ok(toResource(cart));
     }
 
     @Override
@@ -66,5 +68,14 @@ public class CartController implements CartApi {
         return ResponseEntity
                 .created(URI.create("/rentals/" + rentalId))
                 .build();
+    }
+
+    private Resource<CartDetailDTO> toResource(CartDetailDTO cart) {
+        var links = LinkBuilder.from("/cart", cart.sessionId())
+                .self()
+                .custom("addItem", "/items", "PUT")
+                .custom("checkout", "/checkout", "POST")
+                .build();
+        return Resource.of(cart, links);
     }
 }

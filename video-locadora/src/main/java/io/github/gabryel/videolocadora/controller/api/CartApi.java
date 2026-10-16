@@ -4,6 +4,7 @@ import io.github.gabryel.videolocadora.exception.BusinessException;
 import io.github.gabryel.videolocadora.model.dto.cart.CartAddItemDTO;
 import io.github.gabryel.videolocadora.model.dto.cart.CartCreateDTO;
 import io.github.gabryel.videolocadora.model.dto.cart.CartDetailDTO;
+import io.github.gabryel.videolocadora.model.dto.hateoas.Resource;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -21,29 +22,29 @@ public interface CartApi {
     @PostMapping
     @Operation(
             summary = "Criar novo carrinho",
-            description = "Cria um carrinho de compras com sessão única."
+            description = "Cria um carrinho de compras com sessão única, com links HATEOAS de navegação."
     )
     @ApiResponse(
             responseCode = "201",
-            description = "Carrinho criado com sucesso",
-            content = @Content(schema = @Schema(implementation = CartDetailDTO.class))
+            description = "Carrinho criado com sucesso, incluindo links HATEOAS",
+            content = @Content(schema = @Schema(implementation = Resource.class))
     )
-    ResponseEntity<CartDetailDTO> createCart(@Valid @RequestBody CartCreateDTO dto) throws BusinessException;
+    ResponseEntity<Resource<CartDetailDTO>> createCart(@Valid @RequestBody CartCreateDTO dto) throws BusinessException;
 
     @GetMapping("/{sessionId}")
     @Operation(
             summary = "Buscar carrinho",
-            description = "Retorna o carrinho ativo com base no sessionId."
+            description = "Retorna o carrinho ativo com base no sessionId, com links HATEOAS de navegação."
     )
     @ApiResponses({
             @ApiResponse(
                     responseCode = "200",
-                    description = "Carrinho encontrado",
-                    content = @Content(schema = @Schema(implementation = CartDetailDTO.class))
+                    description = "Carrinho encontrado, incluindo links HATEOAS",
+                    content = @Content(schema = @Schema(implementation = Resource.class))
             ),
             @ApiResponse(responseCode = "404", description = "Carrinho não encontrado")
     })
-    ResponseEntity<CartDetailDTO> getCart(
+    ResponseEntity<Resource<CartDetailDTO>> getCart(
             @Parameter(description = "Session ID do carrinho", example = "ABC123")
             @PathVariable String sessionId
     ) throws BusinessException;
@@ -51,17 +52,17 @@ public interface CartApi {
     @PutMapping("/{sessionId}/items")
     @Operation(
             summary = "Adicionar item ao carrinho",
-            description = "Adiciona um filme ao carrinho com reserva temporária."
+            description = "Adiciona um filme ao carrinho com reserva temporária, com links HATEOAS de navegação."
     )
     @ApiResponses({
             @ApiResponse(
                     responseCode = "200",
-                    description = "Item adicionado com sucesso",
-                    content = @Content(schema = @Schema(implementation = CartDetailDTO.class))
+                    description = "Item adicionado com sucesso, incluindo links HATEOAS",
+                    content = @Content(schema = @Schema(implementation = Resource.class))
             ),
             @ApiResponse(responseCode = "409", description = "Filme já adicionado ao carrinho")
     })
-    ResponseEntity<CartDetailDTO> addItem(
+    ResponseEntity<Resource<CartDetailDTO>> addItem(
             @Parameter(description = "Session ID do carrinho", example = "ABC123")
             @PathVariable String sessionId,
             @Valid @RequestBody CartAddItemDTO dto
@@ -70,17 +71,17 @@ public interface CartApi {
     @DeleteMapping("/{sessionId}/items/{itemId}")
     @Operation(
             summary = "Remover item do carrinho",
-            description = "Remove um item do carrinho e libera o estoque do filme."
+            description = "Remove um item do carrinho e libera o estoque do filme, com links HATEOAS de navegação."
     )
     @ApiResponses({
             @ApiResponse(
                     responseCode = "200",
-                    description = "Item removido com sucesso",
-                    content = @Content(schema = @Schema(implementation = CartDetailDTO.class))
+                    description = "Item removido com sucesso, incluindo links HATEOAS",
+                    content = @Content(schema = @Schema(implementation = Resource.class))
             ),
             @ApiResponse(responseCode = "404", description = "Carrinho ou item não encontrado")
     })
-    ResponseEntity<CartDetailDTO> removeItem(
+    ResponseEntity<Resource<CartDetailDTO>> removeItem(
             @Parameter(description = "Session ID do carrinho", example = "ABC123")
             @PathVariable String sessionId,
             @Parameter(description = "ID do item", example = "1")
