@@ -1,16 +1,21 @@
 package io.github.gabryel.videolocadora.controller;
 
 import io.github.gabryel.videolocadora.controller.api.MovieApi;
+import io.github.gabryel.videolocadora.model.dto.hateoas.Link;
+import io.github.gabryel.videolocadora.model.dto.hateoas.Resource;
+import io.github.gabryel.videolocadora.model.dto.hateoas.ResourceCollection;
 import io.github.gabryel.videolocadora.model.dto.movie.MovieDetailDTO;
 import io.github.gabryel.videolocadora.model.dto.movie.MovieSaveDTO;
+import io.github.gabryel.videolocadora.model.mapper.hateoas.LinkBuilder;
 import io.github.gabryel.videolocadora.service.movie.MovieService;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
-import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -24,14 +29,15 @@ public class MovieController implements MovieApi {
     }
 
     @Override
-    public ResponseEntity<List<MovieDetailDTO>> getAllMovies() {
-        return ResponseEntity.ok(movieService.findAllMovies());
+    public ResponseEntity<ResourceCollection<MovieDetailDTO>> getAllMovies(Pageable pageable) {
+        return ResponseEntity.ok(ResourceCollection.of(movieService.findAllPaginated(pageable), "/filmes", this::movieLinks));
     }
 
     @Override
-    public ResponseEntity<MovieDetailDTO> getMovieById(Long id) {
+    public ResponseEntity<Resource<MovieDetailDTO>> getMovieById(Long id) {
         MovieDetailDTO movie = movieService.findById(id);
         return Optional.ofNullable(movie)
+                .map(this::toResource)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
@@ -48,6 +54,17 @@ public class MovieController implements MovieApi {
         return movieService.delete(id)
                 ? ResponseEntity.noContent().build()
                 : ResponseEntity.notFound().build();
+    }
+
+    private Resource<MovieDetailDTO> toResource(MovieDetailDTO movie) {
+        return Resource.of(movie, movieLinks(movie));
+    }
+
+    private Map<String, Link> movieLinks(MovieDetailDTO movie) {
+        return LinkBuilder.from("/filmes", movie.id())
+                .self()
+                .delete()
+                .build();
     }
 
 }

@@ -1,45 +1,48 @@
 package io.github.gabryel.videolocadora.controller.api;
 
+import io.github.gabryel.videolocadora.model.dto.hateoas.Resource;
+import io.github.gabryel.videolocadora.model.dto.hateoas.ResourceCollection;
 import io.github.gabryel.videolocadora.model.dto.movie.MovieDetailDTO;
 import io.github.gabryel.videolocadora.model.dto.movie.MovieSaveDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
-
-import java.util.List;
 
 @Tag(name = "Filmes", description = "Gerenciar/Manipular dados de filmes")
 public interface MovieApi {
 
     @GetMapping
-    @Operation(summary = "Listar filmes", description = "Retorna a lista completa de filmes cadastrados.")
+    @Operation(summary = "Listar filmes", description = "Retorna a lista paginada de filmes cadastrados, com links HATEOAS de navegação e de cada recurso.")
     @ApiResponse(
             responseCode = "200",
-            description = "Lista de filmes retornada com sucesso",
-            content = @Content(array = @ArraySchema(schema = @Schema(implementation = MovieDetailDTO.class)))
+            description = "Página de filmes retornada com sucesso, incluindo links HATEOAS",
+            content = @Content(schema = @Schema(implementation = ResourceCollection.class))
     )
-    ResponseEntity<List<MovieDetailDTO>> getAllMovies();
+    ResponseEntity<ResourceCollection<MovieDetailDTO>> getAllMovies(
+            @Parameter(hidden = true) @PageableDefault(page = 0, size = 10) Pageable pageable
+    );
 
     @GetMapping("/{id}")
-    @Operation(summary = "Buscar filme por ID", description = "Retorna um filme específico com base no ID.")
+    @Operation(summary = "Buscar filme por ID", description = "Retorna um filme específico com base no ID, com links HATEOAS de navegação.")
     @ApiResponses({
             @ApiResponse(
                     responseCode = "200",
-                    description = "Filme encontrado",
-                    content = @Content(schema = @Schema(implementation = MovieDetailDTO.class))
+                    description = "Filme encontrado, incluindo links HATEOAS",
+                    content = @Content(schema = @Schema(implementation = Resource.class))
             ),
             @ApiResponse(responseCode = "404", description = "Filme não encontrado")
     })
-    ResponseEntity<MovieDetailDTO> getMovieById(
+    ResponseEntity<Resource<MovieDetailDTO>> getMovieById(
             @Parameter(description = "ID do filme", example = "1")
             @PathVariable Long id
     );
