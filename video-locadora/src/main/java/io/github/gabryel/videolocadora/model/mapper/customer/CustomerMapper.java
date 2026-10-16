@@ -13,10 +13,6 @@ import org.mapstruct.MappingTarget;
 import org.mapstruct.Named;
 import org.springframework.data.domain.Page;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
-
 
 @Mapper(componentModel = "spring", uses = {AddressMapper.class})
 public interface CustomerMapper {
@@ -42,23 +38,7 @@ public interface CustomerMapper {
      * @return a page with the customer detail DTOs
      */
     default PagedResponseDTO<CustomerDetailDTO> toDetailPage(Page<CustomerEntity> customerPage) {
-        if (customerPage == null || customerPage.isEmpty()) {
-            return new PagedResponseDTO<>(new ArrayList<>(), 0, 0, 0, 0, true, true);
-        }
-
-        List<CustomerDetailDTO> customerDetailDTOList = customerPage.getContent().stream()
-                .map(this::toDetailDTO)
-                .collect(Collectors.toList());
-
-        return new PagedResponseDTO<>(
-                customerDetailDTOList,
-                customerPage.getPageable().getPageNumber(),
-                customerPage.getPageable().getPageSize(),
-                customerPage.getTotalElements(),
-                customerPage.getTotalPages(),
-                customerPage.isFirst(),
-                customerPage.isLast()
-        );
+        return PagedResponseDTO.fromPage(customerPage, this::toDetailDTO);
     }
 
     @Named("removeFormatCpf")
