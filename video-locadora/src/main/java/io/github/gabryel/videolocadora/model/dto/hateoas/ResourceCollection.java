@@ -3,8 +3,6 @@ package io.github.gabryel.videolocadora.model.dto.hateoas;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonUnwrapped;
 import io.github.gabryel.videolocadora.model.dto.page.PagedResponseDTO;
-import io.github.gabryel.videolocadora.model.mapper.hateoas.LinkBuilder;
-
 
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -32,7 +30,7 @@ public record ResourceCollection<T>(List<ResourceItem<T>> data,
     public static <T> ResourceCollection<T> of(
             PagedResponseDTO<T> pagedResponse,
             String basePath,
-            Function<T, Object> idExtractor
+            Function<T, Map<String, Link>> itemLinksBuilder
     ) {
         int currentPage = pagedResponse.pageNumber() + 1;
         int limit = pagedResponse.pageSize();
@@ -40,10 +38,7 @@ public record ResourceCollection<T>(List<ResourceItem<T>> data,
         int totalPages = pagedResponse.totalPages() == 0 ? 1 : pagedResponse.totalPages();
 
         List<ResourceItem<T>> dataWithLinks = pagedResponse.content().stream()
-                .map(item -> new ResourceItem<>(
-                        item,
-                        LinkBuilder.from(basePath, idExtractor.apply(item)).crud().build()
-                ))
+                .map(item -> new ResourceItem<>(item, itemLinksBuilder.apply(item)))
                 .toList();
 
         Map<String, Link> links = new LinkedHashMap<>();
