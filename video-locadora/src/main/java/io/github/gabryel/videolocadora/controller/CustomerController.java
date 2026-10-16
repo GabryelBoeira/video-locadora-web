@@ -5,6 +5,7 @@ import io.github.gabryel.videolocadora.exception.CustomerException;
 import io.github.gabryel.videolocadora.model.dto.customer.CustomerDetailDTO;
 import io.github.gabryel.videolocadora.model.dto.customer.CustomerSaveDTO;
 import io.github.gabryel.videolocadora.model.dto.customer.CustomerUpdateDTO;
+import io.github.gabryel.videolocadora.model.dto.hateoas.Link;
 import io.github.gabryel.videolocadora.model.dto.hateoas.Resource;
 import io.github.gabryel.videolocadora.model.dto.hateoas.ResourceCollection;
 import io.github.gabryel.videolocadora.model.mapper.hateoas.LinkBuilder;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.net.URI;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/customer")
@@ -31,7 +33,7 @@ public class CustomerController implements CustomerApi {
     @Override
     public ResponseEntity<ResourceCollection<CustomerDetailDTO>> getAll(Pageable pageable) {
 
-        return ResponseEntity.ok(ResourceCollection.of(customerService.findAllPaginated(pageable), "/customers", CustomerDetailDTO::id));
+        return ResponseEntity.ok(ResourceCollection.of(customerService.findAllPaginated(pageable), "/customer", this::customerLinks));
     }
 
     @Override
@@ -44,7 +46,7 @@ public class CustomerController implements CustomerApi {
     public ResponseEntity<Void> createNewCustomer(@Valid @RequestBody CustomerSaveDTO createDto) throws CustomerException {
         var customerId = customerService.save(createDto);
         return ResponseEntity
-                .created(URI.create("/customers/" + customerId))
+                .created(URI.create("/customer/" + customerId))
                 .build();
     }
 
@@ -67,14 +69,21 @@ public class CustomerController implements CustomerApi {
     }
 
     private Resource<CustomerDetailDTO> toResource(CustomerDetailDTO customer) {
-        var links = LinkBuilder.from("/customers", customer.id())
+        return Resource.of(customer, customerLinks(customer));
+    }
+
+    private Map<String, Link> customerLinks(CustomerDetailDTO customer) {
+        var links = LinkBuilder.from("/customer", customer.id())
                 .self()
                 .put()
                 .custom("desactivate", "", "DELETE")
-                .custom("byCpf", "/cpf/" + customer.cpf(), "GET")
                 .build();
 
-        return Resource.of(customer, links);
+        links.putAll(LinkBuilder.from("/customer")
+                .custom("byCpf", "/cpf/" + customer.cpf(), "GET")
+                .build());
+
+        return links;
     }
 
 }
