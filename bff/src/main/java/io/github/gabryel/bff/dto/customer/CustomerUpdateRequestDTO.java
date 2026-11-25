@@ -1,0 +1,19 @@
+package io.github.gabryel.bff.dto.customer;
+
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Past;
+
+import java.time.LocalDate;
+import java.util.List;
+
+public record CustomerUpdateRequestDTO(
+        @NotBlank String name,
+        @Email String email,
+        @Past @NotNull LocalDate birthDate,
+        @NotBlank String cellPhone,
+        @Valid @NotNull List<AddressRequestDTO> addresses
+) {
+}
