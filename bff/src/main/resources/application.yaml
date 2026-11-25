@@ -1,0 +1,41 @@
+server:
+  port: 8083
+
+spring:
+  application:
+    name: bff
+  security:
+    oauth2:
+      client:
+        registration:
+          keycloak:
+            client-id: ${KEYCLOAK_BFF_CLIENT_ID}
+            client-secret: ${KEYCLOAK_BFF_CLIENT_SECRET}
+            authorization-grant-type: authorization_code
+            scope: openid, profile, email
+            redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
+        provider:
+          keycloak:
+            authorization-uri: ${KEYCLOAK_AUTHORIZATION_URI}
+            token-uri: ${KEYCLOAK_TOKEN_URI}
+            jwk-set-uri: ${KEYCLOAK_CERTS_URI}
+            user-info-uri: ${KEYCLOAK_USERINFO_URI}
+            user-name-attribute: preferred_username
+
+app:
+  backend:
+    base-url: ${VIDEOLOCADORA_BASE_URL}
+  logout:
+    post-logout-redirect-uri: ${APP_POST_LOGOUT_REDIRECT_URI}
+  cors:
+    allowed-origins: ${APP_CORS_ALLOWED_ORIGINS:http://localhost:3000}
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
