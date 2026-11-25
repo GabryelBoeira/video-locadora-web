@@ -4,19 +4,22 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-**video-locadora-web** is a multi-project system for managing a video rental store. It consists of two Spring Boot applications and shared Docker infrastructure.
+**video-locadora-web** is a multi-project system for managing a video rental store. It consists of three Spring Boot applications and shared Docker infrastructure.
 
 ### Projects
 
 | Directory | Description | Build Tool | Port |
 |-----------|-------------|------------|------|
-| `video-locadora/` | Main monolith — REST API, JPA, Keycloak auth, Kafka producer | Maven | 8080 |
+| `video-locadora/` | Main monolith — REST API, JPA, Keycloak resource server, Kafka producer | Maven | 8080 |
+| `bff/` | Backend For Frontend — Keycloak login/session, proxies/orchestrates calls to video-locadora | Maven | 8083 |
 | `notification-service/` | Microservice — Kafka consumer, email/SMS notifications | Gradle | 8082 |
 | `docker/` | Infrastructure — Docker Compose for MySQL, Keycloak, Kafka, Kafka UI | — | — |
 
 ### Communication Flow
 
 ```
+Browser  --[OAuth2 Authorization Code + session cookie]-->  bff  --[Bearer token via WebClient]-->  video-locadora
+                                                                                                           |
 video-locadora  --[Kafka: videolocadora.domain-events]-->  notification-service
                                                               |-> Email (JavaMail)
                                                               |-> SMS (WebClient)
@@ -31,7 +34,10 @@ cd docker && docker-compose -f docker-compose-infra.yml up -d
 # 2. Start the main application
 cd video-locadora && ./mvnw spring-boot:run
 
-# 3. Start notification service
+# 3. Start the BFF
+cd bff && ./mvnw spring-boot:run
+
+# 4. Start notification service
 cd notification-service && ./gradlew bootRun
 ```
 
@@ -51,22 +57,24 @@ All infrastructure services share the `locadora-net` Docker network.
 ```bash
 # Build all
 cd video-locadora && ./mvnw clean package
+cd bff && ./mvnw clean package
 cd notification-service && ./gradlew build
 
 # Run all tests
 cd video-locadora && ./mvnw test
+cd bff && ./mvnw test
 cd notification-service && ./gradlew test
 ```
 
 ## Tech Stack
 
 - Java 25
-- Spring Boot 4.x (4.0.7 main app, 4.1.0 notification-service)
+- Spring Boot 4.x (4.0.7 main app and bff, 4.1.0 notification-service)
 - MySQL 8 with Flyway migrations
-- Keycloak for OAuth2/JWT authentication
+- Keycloak for OAuth2/OIDC authentication (video-locadora as resource server, bff as OAuth2 client with Authorization Code flow)
 - Apache Kafka for event-driven communication
-- Spring WebFlux (notification-service, async HTTP)
-- Spring MVC (main app, REST API)
+- Spring WebFlux (notification-service, async HTTP; bff uses WebClient for outbound calls on top of Spring MVC)
+- Spring MVC (main app and bff, REST API)
 - Swagger/OpenAPI for API docs
 
 ## Conventions
