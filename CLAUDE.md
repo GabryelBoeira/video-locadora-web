@@ -41,6 +41,19 @@ cd bff && ./mvnw spring-boot:run
 cd notification-service && ./gradlew bootRun
 ```
 
+### Everything in Docker (single compose)
+
+```bash
+cd docker && docker compose -f docker-compose-full.yml up -d --build
+
+# Or via script
+docker/build-and-docker.sh full        # infra + all apps
+docker/build-and-docker.sh             # rebuild only the apps
+docker/build-and-docker.sh bff         # rebuild specific services
+```
+
+`docker/docker-compose-full.yml` starts the infrastructure plus video-locadora, bff and notification-service, each built from its own project `Dockerfile`. Infra variables come from `docker/.env`; each app reads its own env file: `docker/.env-video-locadora`, `docker/.env-bff`, `docker/.env-notification-service`.
+
 ### Infrastructure Services
 
 | Service | URL | Credentials |
