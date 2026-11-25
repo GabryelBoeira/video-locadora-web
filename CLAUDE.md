@@ -65,6 +65,15 @@ docker/build-and-docker.sh bff         # rebuild specific services
 
 All infrastructure services share the `locadora-net` Docker network.
 
+### Database Backup
+
+```bash
+docker/mysql/backup.sh    # dumps videolocadora + keycloak to docker/mysql/backup/locadora-backup.sql.gz
+docker/mysql/restore.sh   # restores that dump into the running mysql container (overwrites data)
+```
+
+When the MySQL volume is created from scratch (e.g. new machine), `docker/mysql/init/02-restore-backup.sh` restores the backup automatically.
+
 ## Common Commands
 
 ```bash
